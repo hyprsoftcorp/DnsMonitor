@@ -8,7 +8,7 @@ It performs similar functions as [changeip.com](https://changeip.com), [dyndns.c
 
 Since .NET Core supports a number of operating systems, this app can be run almost anywhere.
 In our test case we are running this app on a Raspberry PI 3 using the [DietPI](https://dietpi.com/) operating system and the [Own Cloud](https://owncloud.org/) file sharing service.
-The app ensure that anytime our public IP address changes, our DNS records are updated appropriately so that we can always access our Own Cloud server using a predefined domain from anywhere in the world.
+The app ensures that anytime our public IP address changes, our DNS records are updated appropriately so that we can always access our Own Cloud server from anywhere in the world using a predefined domain.
 
 ## Architecture
 The architeture allows developers to easily add additional public IP address providers and DNS providers by simply deriving from PublicIpProvider or DnsProvider and implementing the GetPublicIPAddressAsync method or the GetDnsIPAddressAsync and SetDnsIPAddressAsync methods.
@@ -18,7 +18,7 @@ The architeture allows developers to easily add additional public IP address pro
 2. [HyprsoftPublicIpProvider](https://hyprsoftidentity.azurewebsites.net/) - Requires authentication.
 
 ### Supported DNS Providers
-1. [GoDaddyDnsProvider](https://www.godaddy.com/) - Requires and GoDaddy API key and secret.
+1. [GoDaddyDnsProvider](https://www.godaddy.com/) - Requires a GoDaddy API key and secret.
 
 ## Sample App Settings File
 The 'appsettings.json' file is required.  Here is a sample.
