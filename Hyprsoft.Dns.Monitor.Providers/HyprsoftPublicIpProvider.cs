@@ -1,9 +1,5 @@
 ﻿using Hyprsoft.Logging.Core;
-using IdentityModel.Client;
-using Newtonsoft.Json;
-using System;
-using System.Net;
-using System.Net.Http;
+using Hyprsoft.Web.Client;
 using System.Threading.Tasks;
 
 namespace Hyprsoft.Dns.Monitor.Providers
@@ -12,7 +8,8 @@ namespace Hyprsoft.Dns.Monitor.Providers
     {
         #region Fields
 
-        private string _accessToken;
+        private bool _isDisposed;
+        private readonly HyprsoftClient _client;
 
         #endregion
 
@@ -20,7 +17,7 @@ namespace Hyprsoft.Dns.Monitor.Providers
 
         internal HyprsoftPublicIpProvider(SimpleLogManager logManager, string apiKey, string apiSecret) : base(logManager, apiKey, apiSecret)
         {
-            HttpClient.BaseAddress = new Uri("https://hyprsoftidentity.azurewebsites.net/");
+            _client = new HyprsoftClient(apiKey, apiSecret);
         }
 
         #endregion
@@ -33,40 +30,26 @@ namespace Hyprsoft.Dns.Monitor.Providers
 
         #region Methods
 
-        public async override Task<string> GetPublicIPAddressAsync()
+        public async override Task<string> GetPublicIPAddressAsync() => await _client.GetPublicIPAddressAsync();
+
+        #endregion
+
+        #region IDisposable
+
+        protected override void Dispose(bool disposing)
         {
-            if (String.IsNullOrWhiteSpace(_accessToken))
-            {
-                var disco = await HttpClient.GetDiscoveryDocumentAsync();
-                if (disco.IsError)
-                    throw new HttpRequestException(disco.Error);
+            base.Dispose(disposing);
 
-                await LogManager.LogAsync<DnsProvider>(LogLevel.Info, $"Getting access token using '{disco.TokenEndpoint}'.");
-                var tokenResponse = await HttpClient.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
-                {
-                    Address = disco.TokenEndpoint,
-                    ClientId = ApiKey,
-                    ClientSecret = ApiSecret,
-                    Scope = "api"
-                });
-                if (tokenResponse.IsError)
-                    throw new HttpRequestException(tokenResponse.Error);
+            if (_isDisposed)
+                return;
 
-                _accessToken = tokenResponse.AccessToken;
-            }   // access token exists?
+            // Managed resources.
+            if (disposing)
+                _client?.Dispose();
 
-            HttpClient.SetBearerToken(_accessToken);
-            var response = await HttpClient.GetAsync("api/myip");
-            if (response.IsSuccessStatusCode)
-                return JsonConvert.DeserializeObject<string>(await response.Content.ReadAsStringAsync());
-            else if (response.StatusCode == HttpStatusCode.Unauthorized)
-            {
-                await LogManager.LogAsync<DnsProvider>(LogLevel.Warn, "An expired access token was detected.  Refreshing.");
-                _accessToken = String.Empty;
-                return await GetPublicIPAddressAsync();
-            }
-            else
-                throw new HttpRequestException($"Unable to get public IP address.  Details: {response.ReasonPhrase} - {await response.Content.ReadAsStringAsync()}.");
+            // Unmanaged resources.
+
+            _isDisposed = true;
         }
 
         #endregion
