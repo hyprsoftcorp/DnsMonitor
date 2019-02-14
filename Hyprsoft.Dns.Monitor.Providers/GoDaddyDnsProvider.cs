@@ -76,14 +76,14 @@ namespace Hyprsoft.Dns.Monitor.Providers
             record.data = ip;
             var response = await _httpClient.PutAsync(BuildApiEndpoint(domainName), new StringContent(JsonConvert.SerializeObject(new[] { record }), Encoding.UTF8, "application/json"));
             if (!response.IsSuccessStatusCode)
-                throw new HttpRequestException($"Unable to set DNS record.  Details: {response.ReasonPhrase} - {await response.Content.ReadAsStringAsync()}.");
+                throw new HttpRequestException($"Unable to set DNS record.  Reason: {response.ReasonPhrase}.  Details: {await response.Content.ReadAsStringAsync() ?? "none."}");
         }
 
         private async Task<DnsRecord> GetDnsRecordAsync(string domainName)
         {
             var response = await _httpClient.GetAsync(BuildApiEndpoint(domainName));
             if (!response.IsSuccessStatusCode)
-                throw new HttpRequestException($"Unable to get DNS record.  Details: {response.ReasonPhrase} - {await response.Content.ReadAsStringAsync()}.");
+                throw new HttpRequestException($"Unable to get DNS record.  Reason: {response.ReasonPhrase}.  Details: {await response.Content.ReadAsStringAsync() ?? "none."}");
             else
                 return JsonConvert.DeserializeObject<List<DnsRecord>>(await response.Content.ReadAsStringAsync()).First();
         }
