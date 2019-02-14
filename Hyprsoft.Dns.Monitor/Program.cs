@@ -3,6 +3,7 @@ using Hyprsoft.Logging.Core;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.IO;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -33,7 +34,7 @@ namespace Hyprsoft.Dns.Monitor
                 3. Open/edit %APPDATA%\microsoft\UserSecrets\A20304B9-DA98-407B-B05E-AAE4AF8C87F5\secrets.json
             */
             var builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
+                .SetBasePath(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location))
                 .AddJsonFile(AppSettingsFilename, true)
                 .AddUserSecrets<AppSettings>();
 
