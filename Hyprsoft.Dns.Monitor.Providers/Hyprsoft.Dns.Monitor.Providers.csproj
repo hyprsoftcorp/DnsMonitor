@@ -11,7 +11,7 @@
 
   <ItemGroup>
     <PackageReference Include="Hyprsoft.Logging.Core" Version="1.0.6" />
-    <PackageReference Include="Hyprsoft.Web.Client" Version="1.0.0" />
+    <PackageReference Include="Hyprsoft.Web.Client" Version="1.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
   </ItemGroup>
   
