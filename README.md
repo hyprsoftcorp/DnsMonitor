@@ -4,21 +4,21 @@ It performs similar functions as [changeip.com](https://changeip.com), [dyndns.c
 
 
 ## Getting Started
-<b>This app must be run inside your home/office network, not in the cloud.  You will most likely need to configure port forwarding on your router.</b>
+<b>This app must be run inside your home/office network, not in the cloud.  You will most likely need to configure port forwarding on your router (i.e. forward http port 80, etc.).</b>
 
 Since .NET Core supports a number of operating systems, this app can be run almost anywhere.
 In our test case we are running this app on a Raspberry PI 3 using the [DietPI](https://dietpi.com/) operating system and the [Own Cloud](https://owncloud.org/) file sharing service.
 The app ensures that anytime our public IP address changes, our DNS records are updated appropriately so that we can always access our Own Cloud server from anywhere in the world using a predefined domain.
 
 ## Architecture
-The architeture allows developers to easily add additional public IP address providers and DNS providers by simply deriving from PublicIpProvider or DnsProvider and implementing the GetPublicIPAddressAsync method or the GetDnsIPAddressAsync and SetDnsIPAddressAsync methods.
+The architecture allows developers to easily add additional public IP address providers and DNS providers by simply deriving from PublicIpProvider or DnsProvider and implementing the GetPublicIPAddressAsync method or the GetDnsIPAddressAsync and SetDnsIPAddressAsync methods.
 
 ### Supported Public IP Address Providers
 1. [IpifyPublicIpProvider](https://www.ipify.org/) - No authentication required and is free.
 2. [HyprsoftPublicIpProvider](https://hyprsoftidentity.azurewebsites.net/) - Requires authentication.
 
 ### Supported DNS Providers
-1. [GoDaddyDnsProvider](https://www.godaddy.com/) - Requires a GoDaddy API key and secret.
+1. [GoDaddyDnsProvider](https://www.godaddy.com/) - Requires a [GoDaddy API key and secret](https://developer.godaddy.com/keys).
 
 ## Sample App Settings File
 The 'appsettings.json' file is required.  Here is a sample.
