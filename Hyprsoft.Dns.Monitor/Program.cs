@@ -47,6 +47,11 @@ namespace Hyprsoft.Dns.Monitor
 
             try
             {
+                var title = (((AssemblyTitleAttribute)typeof(Program).Assembly.GetCustomAttribute(typeof(AssemblyTitleAttribute))).Title);
+                var version = (((AssemblyInformationalVersionAttribute)typeof(Program).Assembly.GetCustomAttribute(typeof(AssemblyInformationalVersionAttribute))).InformationalVersion);
+                var providersVersion = (((AssemblyInformationalVersionAttribute)typeof(PublicIpProvider).Assembly.GetCustomAttribute(typeof(AssemblyInformationalVersionAttribute))).InformationalVersion); ;
+                await logManager.LogAsync<Program>(LogLevel.Info, $"{title} v{version}, Providers v{providersVersion}");
+
                 if (settings.Domains == null || settings.Domains.Length <= 0)
                     throw new InvalidOperationException($"The '{AppSettingsFilename}' does not contain any domains.  At least one domain must be entered.");
 

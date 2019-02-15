@@ -60,6 +60,7 @@ WantedBy=multi-user.target
 
 Start the DNS monitor service:
 ```
+sudo systemctl enable dnsmonitor.service
 sudo systemctl daemon-reload
 sudo systemctl start dnsmonitor.service
 ```
