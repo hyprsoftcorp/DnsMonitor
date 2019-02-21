@@ -1,4 +1,4 @@
-﻿using Hyprsoft.Logging.Core;
+﻿using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -45,7 +45,7 @@ namespace Hyprsoft.Dns.Monitor.Providers
 
         #region Constructors
 
-        internal GoDaddyDnsProvider(SimpleLogManager logManager, PublicIpProvider provider, string apiKey, string apiSecret) : base(logManager, provider, apiKey, apiSecret)
+        internal GoDaddyDnsProvider(ILogger logger, PublicIpProvider provider, string apiKey, string apiSecret) : base(logger, provider, apiKey, apiSecret)
         {
             _httpClient = new HttpClient { BaseAddress = new Uri("https://api.godaddy.com/") };
             _httpClient.DefaultRequestHeaders.Add("Authorization", $"sso-key {apiKey}:{apiSecret}");

@@ -1,4 +1,4 @@
-﻿using Hyprsoft.Logging.Core;
+﻿using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
@@ -8,7 +8,7 @@ namespace Hyprsoft.Dns.Monitor.Providers
     {
         #region Constructors
 
-        internal IpifyPublicIpProvider(SimpleLogManager logManager, string apiKey, string apiSecret) : base(logManager, apiKey, apiSecret)
+        internal IpifyPublicIpProvider(ILogger logger, string apiKey, string apiSecret) : base(logger, apiKey, apiSecret)
         {
             HttpClient.BaseAddress = new Uri("https://api.ipify.org/");
         }

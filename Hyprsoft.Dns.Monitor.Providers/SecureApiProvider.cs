@@ -1,4 +1,4 @@
-﻿using Hyprsoft.Logging.Core;
+﻿using Microsoft.Extensions.Logging;
 
 namespace Hyprsoft.Dns.Monitor.Providers
 {
@@ -6,9 +6,9 @@ namespace Hyprsoft.Dns.Monitor.Providers
     {
         #region Constructors
 
-        internal SecureApiProvider(SimpleLogManager logManager, string apiKey, string apiSecret)
+        internal SecureApiProvider(ILogger logger, string apiKey, string apiSecret)
         {
-            LogManager = logManager;
+            Logger = logger;
             ApiKey = apiKey;
             ApiSecret = apiSecret;
         }
@@ -17,7 +17,7 @@ namespace Hyprsoft.Dns.Monitor.Providers
 
         #region Properties
 
-        protected SimpleLogManager LogManager { get; }
+        protected ILogger Logger { get; }
 
         protected string ApiKey { get; }
 

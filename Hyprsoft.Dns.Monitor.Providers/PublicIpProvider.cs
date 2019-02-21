@@ -1,4 +1,4 @@
-﻿using Hyprsoft.Logging.Core;
+﻿using Microsoft.Extensions.Logging;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -15,7 +15,7 @@ namespace Hyprsoft.Dns.Monitor.Providers
 
         #region Constructors
 
-        internal PublicIpProvider(SimpleLogManager logManager, string apiKey, string apiSecret) : base(logManager, apiKey, apiSecret)
+        internal PublicIpProvider(ILogger logger, string apiKey, string apiSecret) : base(logger, apiKey, apiSecret)
         {
         }
 
@@ -29,14 +29,14 @@ namespace Hyprsoft.Dns.Monitor.Providers
 
         #region Methods
 
-        public static PublicIpProvider Create(SimpleLogManager logManager, string providerKey, string apiKey, string apiSecret)
+        public static PublicIpProvider Create(ILogger logger, string providerKey, string apiKey, string apiSecret)
         {
             switch (providerKey)
             {
                 case IpifyPublicIpProvider.Key:
-                    return new IpifyPublicIpProvider(logManager, apiKey, apiSecret);
+                    return new IpifyPublicIpProvider(logger, apiKey, apiSecret);
                 case HyprsoftPublicIpProvider.Key:
-                    return new HyprsoftPublicIpProvider(logManager, apiKey, apiSecret);
+                    return new HyprsoftPublicIpProvider(logger, apiKey, apiSecret);
                 default:
                     throw new InvalidOperationException($"Public IP address provider key '{providerKey}' does not exist.  Valid values are '{IpifyPublicIpProvider.Key}' and '{HyprsoftPublicIpProvider.Key}'.");
             }   // Public IP address provider key switch

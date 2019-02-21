@@ -1,6 +1,7 @@
 ﻿using Hyprsoft.Dns.Monitor.Providers;
 using Hyprsoft.Logging.Core;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
 using System.Reflection;
@@ -41,16 +42,17 @@ namespace Hyprsoft.Dns.Monitor
             var settings = new AppSettings();
             builder.Build().Bind(settings);
 
-            var logManager = new SimpleLogManager();
-            logManager.AddLogger(new SimpleFileLogger { MaxFileSizeBytes = settings.LogFileMaxFileSizeBytes });
-            logManager.AddLogger(new SimpleConsoleLogger());
+            var factory = new LoggerFactory();
+            factory.AddConsole();
+            factory.AddSimpleFileLogger();
+            var logger = factory.CreateLogger<Program>();
 
             try
             {
                 var title = (((AssemblyTitleAttribute)typeof(Program).Assembly.GetCustomAttribute(typeof(AssemblyTitleAttribute))).Title);
                 var version = (((AssemblyInformationalVersionAttribute)typeof(Program).Assembly.GetCustomAttribute(typeof(AssemblyInformationalVersionAttribute))).InformationalVersion);
                 var providersVersion = (((AssemblyInformationalVersionAttribute)typeof(PublicIpProvider).Assembly.GetCustomAttribute(typeof(AssemblyInformationalVersionAttribute))).InformationalVersion); ;
-                await logManager.LogAsync<Program>(LogLevel.Info, $"{title} v{version}, Providers v{providersVersion}");
+                logger.LogInformation($"{title} v{version}, Providers v{providersVersion}");
 
                 if (settings.Domains == null || settings.Domains.Length <= 0)
                     throw new InvalidOperationException($"The '{AppSettingsFilename}' does not contain any domains.  At least one domain must be entered.");
@@ -58,26 +60,26 @@ namespace Hyprsoft.Dns.Monitor
                 using (var cts = new CancellationTokenSource())
                 {
                     Console.CancelKeyPress += (s, e) => cts.Cancel();
-                    using (var ipProvider = PublicIpProvider.Create(logManager, settings.PublicIpProviderKey, settings.PublicIpProviderApiKey, settings.PublicIpProviderApiSecret))
+                    using (var ipProvider = PublicIpProvider.Create(factory.CreateLogger<PublicIpProvider>(), settings.PublicIpProviderKey, settings.PublicIpProviderApiKey, settings.PublicIpProviderApiSecret))
                     {
-                        using (var dnsProvider = DnsProvider.Create(logManager, ipProvider, settings.DnsProviderKey, settings.DnsProviderApiKey, settings.DnsProviderApiSecret))
+                        using (var dnsProvider = DnsProvider.Create(factory.CreateLogger<DnsProvider>(), ipProvider, settings.DnsProviderKey, settings.DnsProviderApiKey, settings.DnsProviderApiSecret))
                         {
-                            await logManager.LogAsync<Program>(LogLevel.Info, $"Checking for public IP changes every '{settings.PollingDelayMinutes}' minutes using IP provider '{ipProvider.GetType().Name}' and DNS provider '{dnsProvider.GetType().Name}'.");
-                            await RunAsync(dnsProvider, logManager, settings.Domains, TimeSpan.FromMinutes(settings.PollingDelayMinutes), cts.Token);
+                            logger.LogInformation($"Checking for public IP changes every '{settings.PollingDelayMinutes}' minutes using IP provider '{ipProvider.GetType().Name}' and DNS provider '{dnsProvider.GetType().Name}'.");
+                            await RunAsync(dnsProvider, logger, settings.Domains, TimeSpan.FromMinutes(settings.PollingDelayMinutes), cts.Token);
                         }   // using DNS provider.
                     }   // using public IP address providre.
                 }   // using cancellation token source.
             }
             catch (Exception ex)
             {
-                await logManager.LogAsync<Program>(ex, "Fatal application error.");
+                logger.LogError(ex, "Fatal application error.");
                 Environment.Exit(1);
             }
-            await logManager.LogAsync<Program>(LogLevel.Info, $"Process exiting.");
+            logger.LogInformation($"Process exiting.");
             Environment.Exit(0);
         }
 
-        private static async Task RunAsync(DnsProvider provider, SimpleLogManager logManager, string[] domains, TimeSpan pollingDelay, CancellationToken token)
+        private static async Task RunAsync(DnsProvider provider, ILogger logger, string[] domains, TimeSpan pollingDelay, CancellationToken token)
         {
             try
             {
@@ -85,12 +87,12 @@ namespace Hyprsoft.Dns.Monitor
                 {
                     try
                     {
-                        await logManager.LogAsync<Program>(LogLevel.Info, "Checking for public IP address changes.");
+                        logger.LogInformation("Checking for public IP address changes.");
                         await provider.CheckForChangesAsync(domains);
                     }
                     catch (Exception ex)
                     {
-                        await logManager.LogAsync<Program>(ex, "Unable to check for public IP address changes.");
+                        logger.LogError(ex, "Unable to check for public IP address changes.");
                     }
                     await Task.Delay(pollingDelay, token);
                 }   // while not cancelled.
@@ -101,7 +103,7 @@ namespace Hyprsoft.Dns.Monitor
             }
             catch (Exception ex)
             {
-                await logManager.LogAsync<Program>(ex, "Fatal application error.");
+                logger.LogError(ex, "Fatal application error.");
             }
         }
 

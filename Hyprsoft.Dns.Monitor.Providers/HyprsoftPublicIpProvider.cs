@@ -1,5 +1,5 @@
-﻿using Hyprsoft.Logging.Core;
-using Hyprsoft.Web.Client;
+﻿using Hyprsoft.Web.Client;
+using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 
 namespace Hyprsoft.Dns.Monitor.Providers
@@ -15,7 +15,7 @@ namespace Hyprsoft.Dns.Monitor.Providers
 
         #region Constructors
 
-        internal HyprsoftPublicIpProvider(SimpleLogManager logManager, string apiKey, string apiSecret) : base(logManager, apiKey, apiSecret)
+        internal HyprsoftPublicIpProvider(ILogger logger, string apiKey, string apiSecret) : base(logger, apiKey, apiSecret)
         {
             _client = new HyprsoftClient(apiKey, apiSecret);
         }

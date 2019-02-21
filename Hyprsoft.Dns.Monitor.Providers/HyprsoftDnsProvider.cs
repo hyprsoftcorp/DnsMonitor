@@ -1,4 +1,4 @@
-﻿using Hyprsoft.Logging.Core;
+﻿using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
@@ -8,7 +8,7 @@ namespace Hyprsoft.Dns.Monitor.Providers
     {
         #region Constructors
 
-        internal HyprsoftDnsProvider(SimpleLogManager logManager, PublicIpProvider provider, string apiKey, string apiSecret) : base(logManager, provider, apiKey, apiSecret)
+        internal HyprsoftDnsProvider(ILogger logger, PublicIpProvider provider, string apiKey, string apiSecret) : base(logger, provider, apiKey, apiSecret)
         {
         }
 
@@ -22,17 +22,18 @@ namespace Hyprsoft.Dns.Monitor.Providers
 
         #region Methods
 
-        protected async override Task<string> GetDnsIPAddressAsync(string domainName)
+        protected override Task<string> GetDnsIPAddressAsync(string domainName)
         {
-            await LogManager.LogAsync<HyprsoftDnsProvider>(LogLevel.Warn, "This DNS provider is for testing purposes only and generates random IP addresses.");
+            Logger.LogWarning("This DNS provider is for testing purposes only and generates random IP addresses.");
 
             var rng = new Random((int)DateTime.Now.Ticks);
-            return $"{rng.Next(1, 256)}.{rng.Next(1, 256)}.{rng.Next(1, 256)}.{rng.Next(1, 256)}";
+            return Task.FromResult($"{rng.Next(1, 256)}.{rng.Next(1, 256)}.{rng.Next(1, 256)}.{rng.Next(1, 256)}");
         }
 
-        protected async override Task SetDnsIPAddressAsync(string domainName, string ip)
+        protected override Task SetDnsIPAddressAsync(string domainName, string ip)
         {
-            await LogManager.LogAsync<HyprsoftDnsProvider>(LogLevel.Warn, "This DNS provider is for testing purposes only and does NOT update any DNS records.");
+            Logger.LogWarning("This DNS provider is for testing purposes only and does NOT update any DNS records.");
+            return Task.CompletedTask;
         }
 
         #endregion

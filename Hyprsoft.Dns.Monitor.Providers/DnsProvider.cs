@@ -1,7 +1,7 @@
-﻿using Hyprsoft.Logging.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Hyprsoft.Dns.Monitor.Providers
 {
@@ -17,7 +17,7 @@ namespace Hyprsoft.Dns.Monitor.Providers
 
         #region Constructors
 
-        internal DnsProvider(SimpleLogManager logManager, PublicIpProvider provider, string apiKey, string apiSecret) : base(logManager, apiKey, apiSecret)
+        internal DnsProvider(ILogger logger, PublicIpProvider provider, string apiKey, string apiSecret) : base(logger, apiKey, apiSecret)
         {
             _publicIPAddressProvider = provider;
         }
@@ -26,14 +26,14 @@ namespace Hyprsoft.Dns.Monitor.Providers
 
         #region Methods
 
-        public static DnsProvider Create(SimpleLogManager logManager, PublicIpProvider provider, string providerKey, string apiKey, string apiSecret)
+        public static DnsProvider Create(ILogger logger, PublicIpProvider provider, string providerKey, string apiKey, string apiSecret)
         {
             switch (providerKey)
             {
                 case GoDaddyDnsProvider.Key:
-                    return new GoDaddyDnsProvider(logManager, provider, apiKey, apiSecret);
+                    return new GoDaddyDnsProvider(logger, provider, apiKey, apiSecret);
                 case HyprsoftDnsProvider.Key:
-                    return new HyprsoftDnsProvider(logManager, provider, apiKey, apiSecret);
+                    return new HyprsoftDnsProvider(logger, provider, apiKey, apiSecret);
                 default:
                     throw new InvalidOperationException($"DNS provider key '{providerKey}' does not exist.  Valid values are '{GoDaddyDnsProvider.Key}' and '{HyprsoftDnsProvider.Key}'.");
             }   // DNS provider key switch
@@ -47,17 +47,17 @@ namespace Hyprsoft.Dns.Monitor.Providers
                 if (!_dnsIPAddresses.ContainsKey(domain))
                 {
                     _dnsIPAddresses[domain] = await GetDnsIPAddressAsync(domain);
-                    await LogManager.LogAsync<DnsProvider>(LogLevel.Info, $"Current DNS IP address for domain '{domain}' is '{_dnsIPAddresses[domain]}'.");
+                    Logger.LogInformation($"Current DNS IP address for domain '{domain}' is '{_dnsIPAddresses[domain]}'.");
                 }
 
                 if (_dnsIPAddresses[domain].Equals(publicIPAddress))
-                    await LogManager.LogAsync<DnsProvider>(LogLevel.Info, $"Current public IP address for domain '{domain}' is '{publicIPAddress}'.  No change detected.");
+                    Logger.LogInformation($"Current public IP address for domain '{domain}' is '{publicIPAddress}'.  No change detected.");
                 else
                 {
-                    await LogManager.LogAsync<DnsProvider>(LogLevel.Info, $"New public IP address '{publicIPAddress}' detected.  Updating DNS record for domain '{domain}'.");
+                    Logger.LogInformation($"New public IP address '{publicIPAddress}' detected.  Updating DNS record for domain '{domain}'.");
                     await SetDnsIPAddressAsync(domain, publicIPAddress);
                     _dnsIPAddresses[domain] = publicIPAddress;
-                    await LogManager.LogAsync<DnsProvider>(LogLevel.Info, $"Domain '{domain}' updated successfully to IP address '{_dnsIPAddresses[domain]}'.");
+                    Logger.LogInformation($"Domain '{domain}' updated successfully to IP address '{_dnsIPAddresses[domain]}'.");
                 }
             }   // for each domain.
         }
