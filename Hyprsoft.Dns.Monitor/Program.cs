@@ -59,7 +59,11 @@ namespace Hyprsoft.Dns.Monitor
 
                 using (var cts = new CancellationTokenSource())
                 {
-                    Console.CancelKeyPress += (s, e) => cts.Cancel();
+                    Console.CancelKeyPress += (s, e) =>
+                    {
+                        cts.Cancel();
+                        e.Cancel = true;
+                    };
                     using (var ipProvider = PublicIpProvider.Create(factory.CreateLogger<PublicIpProvider>(), settings.PublicIpProviderKey, settings.PublicIpProviderApiKey, settings.PublicIpProviderApiSecret))
                     {
                         using (var dnsProvider = DnsProvider.Create(factory.CreateLogger<DnsProvider>(), ipProvider, settings.DnsProviderKey, settings.DnsProviderApiKey, settings.DnsProviderApiSecret))
@@ -76,7 +80,6 @@ namespace Hyprsoft.Dns.Monitor
                 Environment.Exit(1);
             }
             logger.LogInformation($"Process exiting.");
-            Environment.Exit(0);
         }
 
         private static async Task RunAsync(DnsProvider provider, ILogger logger, string[] domains, TimeSpan pollingDelay, CancellationToken token)
@@ -96,14 +99,9 @@ namespace Hyprsoft.Dns.Monitor
                     }
                     await Task.Delay(pollingDelay, token);
                 }   // while not cancelled.
-
             }
             catch (TaskCanceledException)
             {
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "Fatal application error.");
             }
         }
 
