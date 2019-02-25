@@ -4,11 +4,12 @@ It performs similar functions as [changeip.com](https://changeip.com), [dyndns.c
 
 
 ## Getting Started
-<b>This app must be run inside your home/office network, not in the cloud.  You will most likely need to configure port forwarding on your router (i.e. forward http port 80, etc.).</b>
+<b>This app must be run inside your home/office network, not in the cloud.</b>
+You will most likely need to open ports on your firewall to allow services back inside your network (like port 80 for HTTP).
 
 Since .NET Core supports a number of operating systems, this app can be run almost anywhere.
 In our test case we are running this app on a Raspberry PI 3 using the [DietPI](https://dietpi.com/) operating system and the [Own Cloud](https://owncloud.org/) file sharing service.
-The app ensures that anytime our public IP address changes, our DNS records are updated appropriately so that we can always access our Own Cloud server from anywhere in the world using a predefined domain.
+The app ensures that anytime our public IP address changes, our DNS records are updated appropriately so that we can always access our Own Cloud server from anywhere in the world using a predefined sub domain.
 
 ## Architecture
 The architecture allows developers to easily add additional public IP address providers and DNS providers by simply deriving from PublicIpProvider or DnsProvider and implementing the GetPublicIPAddressAsync method or the GetDnsIPAddressAsync and SetDnsIPAddressAsync methods.
