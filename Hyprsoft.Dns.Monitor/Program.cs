@@ -34,11 +34,13 @@ namespace Hyprsoft.Dns.Monitor
                 2. dotnet user-secrets set this that
                 3. Open/edit %APPDATA%\microsoft\UserSecrets\A20304B9-DA98-407B-B05E-AAE4AF8C87F5\secrets.json
             */
+
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location))
-                .AddJsonFile(AppSettingsFilename, true)
-                .AddUserSecrets<AppSettings>();
-
+                .AddJsonFile(AppSettingsFilename, true);
+#if DEBUG
+            builder.AddUserSecrets<AppSettings>();
+#endif
             var settings = new AppSettings();
             builder.Build().Bind(settings);
 
