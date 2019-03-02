@@ -7,12 +7,12 @@
     <Description>Hyprsoft Dns Monitor Providers</Description>
     <Copyright>Copyright © 2019 by Hyprsoft Corporation</Copyright>
     <PackageProjectUrl>http://www.hyprsoft.com/</PackageProjectUrl>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Hyprsoft.Web.Client" Version="1.0.2" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
   </ItemGroup>
   
