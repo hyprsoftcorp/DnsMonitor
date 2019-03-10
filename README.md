@@ -25,6 +25,7 @@ The architecture allows developers to easily add additional public IP address pr
 The 'appsettings.json' file is required.  Here is a sample.
 ~~~json
 {
+  "FirstRun": false,
   "Domains": [ "subdomain1.mydomain.com", "subdomain2.mydomain.com" ],
 
   "PublicIpProviderKey": "IpifyPublicIpProvider",
@@ -36,8 +37,9 @@ The 'appsettings.json' file is required.  Here is a sample.
   "DnsProviderApiSecret": "[optional value if API authentication is required]"
 }
 ~~~
+Note: If the app is being run for the first time (i.e. "FirstRun": true) both the PublicIpProviderApiSecret and DnsProviderApiSecret will automatically be encrypted if they're present.
 
-## App Startup on DietPi
+## App Startup on Linux
 Create a dnsmonitor.service file using:
 ```
 sudo nano /etc/systemd/system/dnsmonitor.service
@@ -71,5 +73,8 @@ Check the app log file:
 sudo nano /usr/bin/dnsmonitor/app-log.log
 ```
 
-## App Startup on Windows
-See [scheduled tasks](https://docs.microsoft.com/en-us/windows/desktop/taskschd/schtasks).
+## App Startup on Windows IoT Core
+```
+schtasks /create /tn "Hyprsoft DNS Monitor" /tr c:\hyprsoft\dnsmonitor\Hyprsoft.Dns.Monitor.exe /sc onstart /ru DefaultAccount
+```
+See [scheduled tasks](https://docs.microsoft.com/en-us/windows/desktop/taskschd/schtasks) for more information.

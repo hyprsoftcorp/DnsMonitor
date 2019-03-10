@@ -1,9 +1,12 @@
 ﻿using Hyprsoft.Dns.Monitor.Providers;
+using System;
 
 namespace Hyprsoft.Dns.Monitor
 {
     public class AppSettings
     {
+        public bool FirstRun { get; set; } = true;
+
         public string[] Domains { get; set; }
 
         public string DnsProviderKey { get; set; } = HyprsoftDnsProvider.Key;
@@ -20,6 +23,6 @@ namespace Hyprsoft.Dns.Monitor
 
         public int LogFileMaxFileSizeBytes { get; set; } = 524288;  // 500k
 
-        public int PollingDelayMinutes { get; set; } = 10;
+        public TimeSpan CheckInterval { get; set; } = TimeSpan.FromMinutes(10);
     }
 }
