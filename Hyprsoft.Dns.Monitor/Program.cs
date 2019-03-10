@@ -56,18 +56,14 @@ namespace Hyprsoft.Dns.Monitor
                 if (settings.FirstRun)
                 {
                     logger.LogWarning("First run detected.  Encrypting sensitive settings.");
-                    if (!String.IsNullOrEmpty(settings.DnsProviderApiSecret))
-                        settings.DnsProviderApiSecret = EncryptString(settings.DnsProviderApiSecret);
-                    if (!String.IsNullOrEmpty(settings.PublicIpProviderApiSecret))
-                        settings.PublicIpProviderApiSecret = EncryptString(settings.PublicIpProviderApiSecret);
+                    settings.DnsProviderApiSecret = EncryptString(settings.DnsProviderApiSecret);
+                    settings.PublicIpProviderApiSecret = EncryptString(settings.PublicIpProviderApiSecret);
                     settings.FirstRun = false;
                     logger.LogInformation($"Saving app settings to '{settingsFilename}'.");
                     await File.WriteAllTextAsync(settingsFilename, JsonConvert.SerializeObject(settings, Formatting.Indented));
                 }   // First run?
-                if (!String.IsNullOrEmpty(settings.DnsProviderApiSecret))
-                    settings.DnsProviderApiSecret = DecryptString(settings.DnsProviderApiSecret);
-                if (!String.IsNullOrEmpty(settings.PublicIpProviderApiSecret))
-                    settings.PublicIpProviderApiSecret = DecryptString(settings.PublicIpProviderApiSecret);
+                settings.DnsProviderApiSecret = DecryptString(settings.DnsProviderApiSecret);
+                settings.PublicIpProviderApiSecret = DecryptString(settings.PublicIpProviderApiSecret);
 
                 using (var cts = new CancellationTokenSource())
                 {
@@ -95,7 +91,7 @@ namespace Hyprsoft.Dns.Monitor
                                     {
                                         logger.LogError(ex, "Unable to check for public IP address changes.");
                                     }
-                                        logger.LogInformation($"Next check at '{DateTime.Now.Add(settings.CheckInterval)}'.");
+                                    logger.LogInformation($"Next check at '{DateTime.Now.Add(settings.CheckInterval)}'.");
                                     await Task.Delay(settings.CheckInterval, cts.Token);
                                 }   // while not cancelled.
                             }
@@ -114,15 +110,21 @@ namespace Hyprsoft.Dns.Monitor
             logger.LogInformation($"Process exiting normally.");
         }
 
-        internal static string EncryptString(string plainText)
+        private static string EncryptString(string plainText)
         {
+            if (String.IsNullOrWhiteSpace(plainText))
+                return plainText;
+
             var dp = DataProtectionProvider.Create(DataProtectionApplicationName);
             var protector = dp.CreateProtector(DataProtectionApplicationName);
             return Convert.ToBase64String(Encoding.UTF8.GetBytes(protector.Protect(plainText)));
         }
 
-        internal static string DecryptString(string secret)
+        private static string DecryptString(string secret)
         {
+            if (String.IsNullOrWhiteSpace(secret))
+                return secret;
+
             var dp = DataProtectionProvider.Create(DataProtectionApplicationName);
             var protector = dp.CreateProtector(DataProtectionApplicationName);
             return protector.Unprotect(System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(secret)));
