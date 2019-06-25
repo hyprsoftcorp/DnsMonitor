@@ -25,7 +25,7 @@ The architecture allows developers to easily add additional public IP address pr
 The 'appsettings.json' file is required.  Here is a sample.
 ~~~json
 {
-  "FirstRun": false,
+  "FirstRun": true,
   "Domains": [ "subdomain1.mydomain.com", "subdomain2.mydomain.com" ],
 
   "PublicIpProviderKey": "IpifyPublicIpProvider",
@@ -75,6 +75,6 @@ sudo nano /usr/bin/dnsmonitor/app-log.log
 
 ## App Startup on Windows IoT Core
 ```
-schtasks /create /tn "Hyprsoft DNS Monitor" /tr c:\hyprsoft\dnsmonitor\Hyprsoft.Dns.Monitor.exe /sc onstart /ru DefaultAccount
+schtasks /create /tn "Hyprsoft DNS Monitor" /tr c:\hyprsoft\dnsmonitor\Hyprsoft.Dns.Monitor.exe /sc onstart /ru System
 ```
 See [scheduled tasks](https://docs.microsoft.com/en-us/windows/desktop/taskschd/schtasks) for more information.
