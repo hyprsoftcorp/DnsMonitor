@@ -1,16 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.329
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29209.62
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hyprsoft.Dns.Monitor", "Hyprsoft.DNS.Monitor\Hyprsoft.Dns.Monitor.csproj", "{B9DE6CFE-44D0-4D95-B87C-29D7B2F474E1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9239332B-540A-42AA-87FB-83415FAE9699}"
 	ProjectSection(SolutionItems) = preProject
+		Dockerfile = Dockerfile
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hyprsoft.Dns.Monitor.Providers", "Hyprsoft.Dns.Monitor.Providers\Hyprsoft.Dns.Monitor.Providers.csproj", "{2EDAA1A0-69E1-4345-B573-2A45D5688D48}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hyprsoft.Dns.Monitor.Providers", "Hyprsoft.Dns.Monitor.Providers\Hyprsoft.Dns.Monitor.Providers.csproj", "{2EDAA1A0-69E1-4345-B573-2A45D5688D48}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

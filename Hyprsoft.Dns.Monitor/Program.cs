@@ -25,11 +25,11 @@ namespace Hyprsoft.Dns.Monitor
 
         static async Task Main(string[] args)
         {
-            var factory = new LoggerFactory();
-#pragma warning disable CS0618 // Type or member is obsolete
-            factory.AddConsole();
-#pragma warning restore CS0618 // Type or member is obsolete
-            factory.AddSimpleFileLogger();
+            var factory = LoggerFactory.Create(builder =>
+            {
+                builder.AddConsole();
+                builder.AddSimpleFileLogger();
+            });
             var logger = factory.CreateLogger<Program>();
 
             try
