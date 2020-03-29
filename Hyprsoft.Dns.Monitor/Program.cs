@@ -65,42 +65,36 @@ namespace Hyprsoft.Dns.Monitor
                 settings.DnsProviderApiSecret = DecryptString(settings.DnsProviderApiSecret);
                 settings.PublicIpProviderApiSecret = DecryptString(settings.PublicIpProviderApiSecret);
 
-                using (var cts = new CancellationTokenSource())
+                using var cts = new CancellationTokenSource();
+                Console.WriteLine("\nPress Ctrl+C to exit.\n");
+                Console.CancelKeyPress += (s, e) =>
                 {
-                    Console.WriteLine("\nPress Ctrl+C to exit.\n");
-                    Console.CancelKeyPress += (s, e) =>
+                    cts.Cancel();
+                    e.Cancel = true;
+                };
+                using var ipProvider = PublicIpProvider.Create(factory.CreateLogger<PublicIpProvider>(), settings.PublicIpProviderKey, settings.PublicIpProviderApiKey, settings.PublicIpProviderApiSecret);
+                using var dnsProvider = DnsProvider.Create(factory.CreateLogger<DnsProvider>(), ipProvider, settings.DnsProviderKey, settings.DnsProviderApiKey, settings.DnsProviderApiSecret);
+                logger.LogInformation($"Checking for public IP changes every '{settings.CheckInterval.TotalMinutes}' minutes using IP provider '{ipProvider.GetType().Name}' and DNS provider '{dnsProvider.GetType().Name}'.");
+                try
+                {
+                    while (!cts.Token.IsCancellationRequested)
                     {
-                        cts.Cancel();
-                        e.Cancel = true;
-                    };
-                    using (var ipProvider = PublicIpProvider.Create(factory.CreateLogger<PublicIpProvider>(), settings.PublicIpProviderKey, settings.PublicIpProviderApiKey, settings.PublicIpProviderApiSecret))
-                    {
-                        using (var dnsProvider = DnsProvider.Create(factory.CreateLogger<DnsProvider>(), ipProvider, settings.DnsProviderKey, settings.DnsProviderApiKey, settings.DnsProviderApiSecret))
+                        try
                         {
-                            logger.LogInformation($"Checking for public IP changes every '{settings.CheckInterval.TotalMinutes}' minutes using IP provider '{ipProvider.GetType().Name}' and DNS provider '{dnsProvider.GetType().Name}'.");
-                            try
-                            {
-                                while (!cts.Token.IsCancellationRequested)
-                                {
-                                    try
-                                    {
-                                        logger.LogInformation("Checking for public IP address changes.");
-                                        await dnsProvider.CheckForChangesAsync(settings.Domains);
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        logger.LogError(ex, "Unable to check for public IP address changes.");
-                                    }
-                                    logger.LogInformation($"Next check at '{DateTime.Now.Add(settings.CheckInterval)}'.");
-                                    await Task.Delay(settings.CheckInterval, cts.Token);
-                                }   // while not cancelled.
-                            }
-                            catch (TaskCanceledException)
-                            {
-                            }
-                        }   // using DNS provider.
-                    }   // using public IP address providre.
-                }   // using cancellation token source.
+                            logger.LogInformation("Checking for public IP address changes.");
+                            await dnsProvider.CheckForChangesAsync(settings.Domains);
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.LogError(ex, "Unable to check for public IP address changes.");
+                        }
+                        logger.LogInformation($"Next check at '{DateTime.Now.Add(settings.CheckInterval)}'.");
+                        await Task.Delay(settings.CheckInterval, cts.Token);
+                    }   // while not cancelled.
+                }
+                catch (TaskCanceledException)
+                {
+                }
             }
             catch (Exception ex)
             {
