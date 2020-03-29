@@ -1,5 +1,5 @@
 # Introduction 
-This .NET Core 2.2 console app monitors your public IP address for changes and updates the appropriate DNS records to allow remote access to your home/office network.
+This .NET Core 3.1 console app monitors your public IP address for changes and updates the appropriate DNS records to allow remote access to your home/office network.
 It performs similar functions as [changeip.com](https://changeip.com), [dyndns.com](https://dyndns.com), [easydns.com](https://easydns.com), and [no-ip.com](https://noip.com) for free.
 
 
@@ -8,8 +8,8 @@ It performs similar functions as [changeip.com](https://changeip.com), [dyndns.c
 You will most likely need to open ports on your firewall to allow services back inside your network (like port 80 for HTTP).
 
 Since .NET Core supports a number of operating systems, this app can be run almost anywhere.
-In our test case we are running this app on a Raspberry PI 3 using the [DietPI](https://dietpi.com/) operating system and the [Own Cloud](https://owncloud.org/) file sharing service.
-The app ensures that anytime our public IP address changes, our DNS records are updated appropriately so that we can always access our Own Cloud server from anywhere in the world using a predefined sub domain.
+In our test case we are running this app on a Raspberry PI 3 using the Raspian Lite operating system.
+The app ensures that anytime our public IP address changes, our DNS records are updated appropriately so that we can always access various services on our network from anywhere in the world.
 
 ## Architecture
 The architecture allows developers to easily add additional public IP address providers and DNS providers by simply deriving from PublicIpProvider or DnsProvider and implementing the GetPublicIPAddressAsync method or the GetDnsIPAddressAsync and SetDnsIPAddressAsync methods.
@@ -38,6 +38,7 @@ The 'appsettings.json' file is required.  Here is a sample.
 }
 ~~~
 Note: If the app is being run for the first time (i.e. "FirstRun": true) both the PublicIpProviderApiSecret and DnsProviderApiSecret will automatically be encrypted if they're present.
+<b>If you're planning to automatically run this app at startup, you MUST run the app the first time with the same user context as on startup</b> otherwise any encrypted data in the settings file will be inaccessible.
 
 ## App Startup on Linux
 Create a dnsmonitor.service file using:
@@ -67,9 +68,9 @@ sudo systemctl enable dnsmonitor.service
 sudo systemctl daemon-reload
 sudo systemctl start dnsmonitor.service
 ```
-
-Check the app log file:
+Troubleshooting
 ```
+sudo systemctl status dnsmonitor.service
 sudo nano /usr/bin/dnsmonitor/app-log.log
 ```
 
