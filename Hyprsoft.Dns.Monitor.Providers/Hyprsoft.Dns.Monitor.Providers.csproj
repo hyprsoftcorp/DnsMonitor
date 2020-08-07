@@ -5,14 +5,14 @@
     <Authors>Hyprsoft Corporation</Authors>
     <Product>Hyprsoft Dns Monitor Providers</Product>
     <Description>Hyprsoft Dns Monitor Providers</Description>
-    <Copyright>Copyright © 2019 by Hyprsoft Corporation</Copyright>
+    <Copyright>Copyright © 2020 by Hyprsoft Corporation</Copyright>
     <PackageProjectUrl>http://www.hyprsoft.com/</PackageProjectUrl>
-    <Version>1.0.3</Version>
+    <Version>1.0.4</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Hyprsoft.Web.Client" Version="1.0.4" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.0.0" />
+    <PackageReference Include="Hyprsoft.Web.Client" Version="1.0.6" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.6" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
   
