@@ -1,5 +1,5 @@
 # Introduction 
-This .NET Core 3.1 console app monitors your public IP address for changes and updates the appropriate DNS records to allow remote access to your home/office network.
+This .NET 5.0 console app monitors your public IP address for changes and updates the appropriate DNS records to allow remote access to your home/office network.
 It performs similar functions as [changeip.com](https://changeip.com), [dyndns.com](https://dyndns.com), [easydns.com](https://easydns.com), and [no-ip.com](https://noip.com) for free.
 
 
@@ -8,7 +8,7 @@ It performs similar functions as [changeip.com](https://changeip.com), [dyndns.c
 You will most likely need to open ports on your firewall to allow services back inside your network (like port 80 for HTTP).
 
 Since .NET Core supports a number of operating systems, this app can be run almost anywhere.
-In our test case we are running this app on a Raspberry PI 3 using the Raspian Lite operating system.
+In our test case we are running this app on a Raspberry PI 4 using the Rasberry PI OS.
 The app ensures that anytime our public IP address changes, our DNS records are updated appropriately so that we can always access various services on our network from anywhere in the world.
 
 ## Architecture
