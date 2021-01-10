@@ -1,14 +1,13 @@
 # Introduction 
-This .NET 5.0 console app monitors your public IP address for changes and updates the appropriate DNS records to allow remote access to your home/office network.
-It performs similar functions as [changeip.com](https://changeip.com), [dyndns.com](https://dyndns.com), [easydns.com](https://easydns.com), and [no-ip.com](https://noip.com) for free.
-
+This .NET 5.0 "worker" background service monitors your public IP address for changes and updates the appropriate DNS records to allow remote access to your home/office network.
+It performs similar functions as [changeip.com](https://changeip.com), [dyndns.com](https://dyndns.com), [easydns.com](https://easydns.com), and [no-ip.com](https://noip.com).
 
 ## Getting Started
 <b>This app must be run inside your home/office network, not in the cloud.</b>
 You will most likely need to open ports on your firewall to allow traffic back inside your network (like port 80 for HTTP).
 
 Since .NET 5 supports a number of operating systems, this app can be run almost anywhere.
-In our test case we are running this app on a Raspberry PI 4 using the Rasberry PI OS.
+In our test case we are running this app on a Raspberry PI 4 $GB using the Rasberry PI OS Lite.
 The app ensures that anytime our public IP address changes, our DNS records are updated appropriately so that we can always access various services on our network from anywhere in the world.
 
 ## Architecture
