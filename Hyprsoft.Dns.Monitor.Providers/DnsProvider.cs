@@ -1,47 +1,37 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 
 namespace Hyprsoft.Dns.Monitor.Providers
 {
-    public abstract class DnsProvider : SecureApiProvider, IDisposable
+    public interface IDnsProvider
+    {
+        Task CheckForChangesAsync(string[] domainNames);
+    }
+
+    public abstract class DnsProvider : SecureApiProvider, IDnsProvider
     {
         #region Fields
 
-        private bool _isDisposed;
-        private readonly PublicIpProvider _publicIPAddressProvider;
+        private readonly IPublicIpProvider _publicIpProvider;
         private Dictionary<string, string> _dnsIPAddresses = new Dictionary<string, string>();
 
         #endregion
 
         #region Constructors
 
-        internal DnsProvider(ILogger logger, PublicIpProvider provider, string apiKey, string apiSecret) : base(logger, apiKey, apiSecret)
-        {
-            _publicIPAddressProvider = provider;
-        }
+        public DnsProvider(ILoggerFactory logger, IPublicIpProvider provider, ApiCredentials credentials) : base(logger, credentials) => _publicIpProvider = provider;
 
         #endregion
 
         #region Methods
 
-        public static DnsProvider Create(ILogger logger, PublicIpProvider provider, string providerKey, string apiKey, string apiSecret)
-        {
-            switch (providerKey)
-            {
-                case GoDaddyDnsProvider.Key:
-                    return new GoDaddyDnsProvider(logger, provider, apiKey, apiSecret);
-                case HyprsoftDnsProvider.Key:
-                    return new HyprsoftDnsProvider(logger, provider, apiKey, apiSecret);
-                default:
-                    throw new InvalidOperationException($"DNS provider key '{providerKey}' does not exist.  Valid values are '{GoDaddyDnsProvider.Key}' and '{HyprsoftDnsProvider.Key}'.");
-            }   // DNS provider key switch
-        }
-
         public async Task CheckForChangesAsync(string[] domainNames)
         {
-            var publicIPAddress = await _publicIPAddressProvider.GetPublicIPAddressAsync();
+            if (domainNames == null || domainNames.Length <= 0)
+                return;
+
+            var publicIpAddress = await _publicIpProvider.GetPublicIPAddressAsync();
             foreach (var domain in domainNames)
             {
                 if (!_dnsIPAddresses.ContainsKey(domain))
@@ -50,13 +40,13 @@ namespace Hyprsoft.Dns.Monitor.Providers
                     Logger.LogInformation($"Current DNS IP address for domain '{domain}' is '{_dnsIPAddresses[domain]}'.");
                 }
 
-                if (_dnsIPAddresses[domain].Equals(publicIPAddress))
-                    Logger.LogInformation($"Current public IP address for domain '{domain}' is '{publicIPAddress}'.  No change detected.");
+                if (_dnsIPAddresses[domain].Equals(publicIpAddress))
+                    Logger.LogInformation($"Current public IP address for domain '{domain}' is '{publicIpAddress}'.  No change detected.");
                 else
                 {
-                    Logger.LogInformation($"New public IP address '{publicIPAddress}' detected.  Updating DNS record for domain '{domain}'.");
-                    await SetDnsIPAddressAsync(domain, publicIPAddress);
-                    _dnsIPAddresses[domain] = publicIPAddress;
+                    Logger.LogInformation($"New public IP address '{publicIpAddress}' detected.  Updating DNS record for domain '{domain}'.");
+                    await SetDnsIPAddressAsync(domain, publicIpAddress);
+                    _dnsIPAddresses[domain] = publicIpAddress;
                     Logger.LogInformation($"Domain '{domain}' updated successfully to IP address '{_dnsIPAddresses[domain]}'.");
                 }
             }   // for each domain.
@@ -65,29 +55,6 @@ namespace Hyprsoft.Dns.Monitor.Providers
         protected abstract Task<string> GetDnsIPAddressAsync(string domainName);
 
         protected abstract Task SetDnsIPAddressAsync(string domainName, string ip);
-
-        #endregion
-
-        #region IDisposable
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (_isDisposed)
-                return;
-
-            // Managed resources.
-            if (disposing) { }
-
-            // Unmanaged resources.
-
-            _isDisposed = true;
-        }
 
         #endregion
     }

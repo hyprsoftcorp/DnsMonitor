@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Hyprsoft.Dns.Monitor.Providers
@@ -8,10 +9,7 @@ namespace Hyprsoft.Dns.Monitor.Providers
     {
         #region Constructors
 
-        internal IpifyPublicIpProvider(ILogger logger, string apiKey, string apiSecret) : base(logger, apiKey, apiSecret)
-        {
-            HttpClient.BaseAddress = new Uri("https://api.ipify.org/");
-        }
+        public IpifyPublicIpProvider(ILoggerFactory logger, ApiCredentials credentials, HttpClient httpClient) : base(logger, credentials, httpClient) => HttpClient.BaseAddress = new Uri("https://api.ipify.org/");
 
         #endregion
 
@@ -23,10 +21,7 @@ namespace Hyprsoft.Dns.Monitor.Providers
 
         #region Methods
 
-        public async override Task<string> GetPublicIPAddressAsync()
-        {
-            return await HttpClient.GetStringAsync("/");
-        }
+        public async override Task<string> GetPublicIPAddressAsync() => await HttpClient.GetStringAsync("/");
 
         #endregion
     }

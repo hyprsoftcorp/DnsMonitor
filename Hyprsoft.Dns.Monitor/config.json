@@ -1,0 +1,15 @@
+{
+  "IsFirstRun": true,
+  "Domains": [],
+  "DnsProviderApiCredentials": {
+    "ProviderKey": "HyprsoftDnsProvider",
+    "ApiKey": null,
+    "ApiSecret": null
+  },
+  "PublicIpProviderApiCredentials": {
+    "ProviderKey": "IpifyPublicIpProvider",
+    "ApiKey": null,
+    "ApiSecret": null
+  },
+  "CheckIntervalMinutes": 10
+}
