@@ -5,9 +5,9 @@ It performs similar functions as [changeip.com](https://changeip.com), [dyndns.c
 
 ## Getting Started
 <b>This app must be run inside your home/office network, not in the cloud.</b>
-You will most likely need to open ports on your firewall to allow services back inside your network (like port 80 for HTTP).
+You will most likely need to open ports on your firewall to allow traffic back inside your network (like port 80 for HTTP).
 
-Since .NET Core supports a number of operating systems, this app can be run almost anywhere.
+Since .NET 5 supports a number of operating systems, this app can be run almost anywhere.
 In our test case we are running this app on a Raspberry PI 4 using the Rasberry PI OS.
 The app ensures that anytime our public IP address changes, our DNS records are updated appropriately so that we can always access various services on our network from anywhere in the world.
 
@@ -25,16 +25,19 @@ The architecture allows developers to easily add additional public IP address pr
 The 'appsettings.json' file is required.  Here is a sample.
 ~~~json
 {
-  "FirstRun": true,
+  "IsFirstRun": true,
   "Domains": [ "subdomain1.mydomain.com", "subdomain2.mydomain.com" ],
-
-  "PublicIpProviderKey": "IpifyPublicIpProvider",
-  "PublicIpProviderApiKey": "[optional value if API authentication is required]",
-  "PublicIpProviderApiSecret": "[optional value if API authentication is required]",
-
-  "DnsProviderKey": "HyprsoftDnsProvider",
-  "DnsProviderApiKey": "[optional value if API authentication is required]",
-  "DnsProviderApiSecret": "[optional value if API authentication is required]"
+  "DnsProviderApiCredentials": {
+    "ProviderKey": "HyprsoftDnsProvider",
+    "ApiKey": "[optional value if API authentication is required]",
+    "ApiSecret": "[optional value if API authentication is required]"
+  },
+  "PublicIpProviderApiCredentials": {
+    "ProviderKey": "IpifyPublicIpProvider",
+    "ApiKey": "[optional value if API authentication is required]",
+    "ApiSecret": "[optional value if API authentication is required]"
+  },
+  "CheckIntervalMinutes": 10
 }
 ~~~
 Note: If the app is being run for the first time (i.e. "FirstRun": true) both the PublicIpProviderApiSecret and DnsProviderApiSecret will automatically be encrypted if they're present.

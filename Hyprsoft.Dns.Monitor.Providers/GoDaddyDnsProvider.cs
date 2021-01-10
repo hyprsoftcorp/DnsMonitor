@@ -38,17 +38,17 @@ namespace Hyprsoft.Dns.Monitor.Providers
 
         #region Fields
 
-        private bool _isDisposed;
         private readonly HttpClient _httpClient;
 
         #endregion
 
         #region Constructors
 
-        internal GoDaddyDnsProvider(ILogger logger, PublicIpProvider provider, string apiKey, string apiSecret) : base(logger, provider, apiKey, apiSecret)
+        public GoDaddyDnsProvider(ILoggerFactory logger, IPublicIpProvider provider, ApiCredentials credentials, HttpClient httpClient) : base(logger, provider, credentials)
         {
-            _httpClient = new HttpClient { BaseAddress = new Uri("https://api.godaddy.com/") };
-            _httpClient.DefaultRequestHeaders.Add("Authorization", $"sso-key {apiKey}:{apiSecret}");
+            _httpClient = httpClient;
+            _httpClient.BaseAddress = new Uri("https://api.godaddy.com/");
+            _httpClient.DefaultRequestHeaders.Add("Authorization", $"sso-key {credentials.ApiKey}:{credentials.ApiSecret}");
         }
 
         #endregion
@@ -91,26 +91,6 @@ namespace Hyprsoft.Dns.Monitor.Providers
         private string BuildApiEndpoint(string domainName)
         {
             return $"v1/domains/{domainName.Substring(domainName.IndexOf(".") + 1)}/records/A/{domainName.Substring(0, domainName.IndexOf("."))}";
-        }
-
-        #endregion
-
-        #region IDisposable
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-
-            if (_isDisposed)
-                return;
-
-            // Managed resources.
-            if (disposing)
-                _httpClient?.Dispose();
-
-            // Unmanaged resources.
-
-            _isDisposed = true;
         }
 
         #endregion

@@ -1,10 +1,12 @@
 ﻿using Hyprsoft.Web.Client;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Hyprsoft.Dns.Monitor.Providers
 {
-    public class HyprsoftPublicIpProvider : PublicIpProvider
+    public class HyprsoftPublicIpProvider : PublicIpProvider, IDisposable
     {
         #region Fields
 
@@ -15,10 +17,7 @@ namespace Hyprsoft.Dns.Monitor.Providers
 
         #region Constructors
 
-        internal HyprsoftPublicIpProvider(ILogger logger, string apiKey, string apiSecret) : base(logger, apiKey, apiSecret)
-        {
-            _client = new HyprsoftClient(apiKey, apiSecret);
-        }
+        public HyprsoftPublicIpProvider(ILoggerFactory logger, ApiCredentials credentials, HttpClient httpClient) : base(logger, credentials, httpClient) => _client = new HyprsoftClient(credentials.ApiKey, credentials.ApiSecret);
 
         #endregion
 
@@ -36,10 +35,14 @@ namespace Hyprsoft.Dns.Monitor.Providers
 
         #region IDisposable
 
-        protected override void Dispose(bool disposing)
+        public void Dispose()
         {
-            base.Dispose(disposing);
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
+        protected virtual void Dispose(bool disposing)
+        {
             if (_isDisposed)
                 return;
 

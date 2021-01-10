@@ -6,22 +6,19 @@ namespace Hyprsoft.Dns.Monitor.Providers
     {
         #region Constructors
 
-        internal SecureApiProvider(ILogger logger, string apiKey, string apiSecret)
+        public SecureApiProvider(ILoggerFactory logger, ApiCredentials credentials)
         {
-            Logger = logger;
-            ApiKey = apiKey;
-            ApiSecret = apiSecret;
+            Logger = logger.CreateLogger(GetType());
+            Credentials = credentials;
         }
-        
+
         #endregion
 
         #region Properties
 
         protected ILogger Logger { get; }
 
-        protected string ApiKey { get; }
-
-        protected string ApiSecret { get; }
+        protected ApiCredentials Credentials { get; }
 
         #endregion
     }
