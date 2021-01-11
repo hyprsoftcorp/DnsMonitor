@@ -14,18 +14,18 @@ namespace Hyprsoft.Dns.Monitor
 
         private readonly ILogger<Worker> _logger;
         private readonly MonitorSettings _settings;
-        private readonly IPublicIpProvider _ipProvider;
+        private readonly IPublicIpProvider _publicIpProvider;
         private readonly IDnsProvider _dnsProvider;
 
         #endregion
 
         #region Constructors
 
-        public Worker(ILogger<Worker> logger, MonitorSettings settings, IPublicIpProvider ipProvider, IDnsProvider dnsProvider)
+        public Worker(ILogger<Worker> logger, MonitorSettings settings, IPublicIpProvider publicIpProvider, IDnsProvider dnsProvider)
         {
             _logger = logger;
             _settings = settings;
-            _ipProvider = ipProvider;
+            _publicIpProvider = publicIpProvider;
             _dnsProvider = dnsProvider;
         }
 
@@ -38,11 +38,11 @@ namespace Hyprsoft.Dns.Monitor
             var product = (((AssemblyProductAttribute)typeof(Worker).Assembly.GetCustomAttribute(typeof(AssemblyProductAttribute))).Product);
             var version = (((AssemblyInformationalVersionAttribute)typeof(Worker).Assembly.GetCustomAttribute(typeof(AssemblyInformationalVersionAttribute))).InformationalVersion);
             var providersVersion = (((AssemblyInformationalVersionAttribute)typeof(PublicIpProvider).Assembly.GetCustomAttribute(typeof(AssemblyInformationalVersionAttribute))).InformationalVersion); ;
-
             _logger.LogInformation($"{product} v{version} | {product} Providers v{providersVersion}");
+
             if (_settings.Domains.Length <= 0)
                 _logger.LogWarning($"The '{Program.ConfigurationFilename}' does not contain any domains.  At least one domain should be defined.");
-            _logger.LogInformation($"Checking for public IP changes every '{_settings.CheckIntervalMinutes}' minutes using IP provider '{_ipProvider.GetType().Name}' and DNS provider '{_dnsProvider.GetType().Name}' for domains '{String.Join(", ", _settings.Domains)}'.");
+            _logger.LogInformation($"Checking for public IP changes every '{_settings.CheckIntervalMinutes}' minutes using IP provider '{_publicIpProvider.GetType().Name}' and DNS provider '{_dnsProvider.GetType().Name}' for domains '{String.Join(", ", _settings.Domains)}'.");
 
             return base.StartAsync(cancellationToken);
         }

@@ -14,13 +14,13 @@ namespace Hyprsoft.Dns.Monitor.Providers
         #region Fields
 
         private readonly IPublicIpProvider _publicIpProvider;
-        private Dictionary<string, string> _dnsIPAddresses = new Dictionary<string, string>();
+        private Dictionary<string, string> _dnsIpAddresses = new Dictionary<string, string>();
 
         #endregion
 
         #region Constructors
 
-        public DnsProvider(ILoggerFactory logger, IPublicIpProvider provider, ApiCredentials credentials) : base(logger, credentials) => _publicIpProvider = provider;
+        public DnsProvider(ILogger logger, IPublicIpProvider provider, DnsProviderApiCredentials credentials) : base(logger, credentials) => _publicIpProvider = provider;
 
         #endregion
 
@@ -34,27 +34,27 @@ namespace Hyprsoft.Dns.Monitor.Providers
             var publicIpAddress = await _publicIpProvider.GetPublicIPAddressAsync();
             foreach (var domain in domainNames)
             {
-                if (!_dnsIPAddresses.ContainsKey(domain))
+                if (!_dnsIpAddresses.ContainsKey(domain))
                 {
-                    _dnsIPAddresses[domain] = await GetDnsIPAddressAsync(domain);
-                    Logger.LogInformation($"Current DNS IP address for domain '{domain}' is '{_dnsIPAddresses[domain]}'.");
+                    _dnsIpAddresses[domain] = await GetDnsIpAddressAsync(domain);
+                    Logger.LogInformation($"Current DNS IP address for domain '{domain}' is '{_dnsIpAddresses[domain]}'.");
                 }
 
-                if (_dnsIPAddresses[domain].Equals(publicIpAddress))
+                if (_dnsIpAddresses[domain].Equals(publicIpAddress))
                     Logger.LogInformation($"Current public IP address for domain '{domain}' is '{publicIpAddress}'.  No change detected.");
                 else
                 {
                     Logger.LogInformation($"New public IP address '{publicIpAddress}' detected.  Updating DNS record for domain '{domain}'.");
-                    await SetDnsIPAddressAsync(domain, publicIpAddress);
-                    _dnsIPAddresses[domain] = publicIpAddress;
-                    Logger.LogInformation($"Domain '{domain}' updated successfully to IP address '{_dnsIPAddresses[domain]}'.");
+                    await SetDnsIpAddressAsync(domain, publicIpAddress);
+                    _dnsIpAddresses[domain] = publicIpAddress;
+                    Logger.LogInformation($"Domain '{domain}' updated successfully to IP address '{_dnsIpAddresses[domain]}'.");
                 }
             }   // for each domain.
         }
 
-        protected abstract Task<string> GetDnsIPAddressAsync(string domainName);
+        protected abstract Task<string> GetDnsIpAddressAsync(string domainName);
 
-        protected abstract Task SetDnsIPAddressAsync(string domainName, string ip);
+        protected abstract Task SetDnsIpAddressAsync(string domainName, string ip);
 
         #endregion
     }

@@ -9,7 +9,7 @@ namespace Hyprsoft.Dns.Monitor.Providers
     {
         #region Constructors
 
-        public IpifyPublicIpProvider(ILoggerFactory logger, ApiCredentials credentials, HttpClient httpClient) : base(logger, credentials, httpClient) => HttpClient.BaseAddress = new Uri("https://api.ipify.org/");
+        public IpifyPublicIpProvider(ILogger<IpifyPublicIpProvider> logger, PublicIpProviderApiCredentials credentials, HttpClient httpClient) : base(logger, credentials, httpClient) => HttpClient.BaseAddress = new Uri("https://api.ipify.org/");
 
         #endregion
 

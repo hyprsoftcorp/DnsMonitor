@@ -13,7 +13,7 @@ namespace Hyprsoft.Dns.Monitor.Providers
     {
         #region Constructors
 
-        public PublicIpProvider(ILoggerFactory logger, ApiCredentials credentials, HttpClient httpClient) : base(logger, credentials) => HttpClient = httpClient;
+        public PublicIpProvider(ILogger logger, PublicIpProviderApiCredentials credentials, HttpClient httpClient) : base(logger, credentials) => HttpClient = httpClient;
 
         #endregion
 

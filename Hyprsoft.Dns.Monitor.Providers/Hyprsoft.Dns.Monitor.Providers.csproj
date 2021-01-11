@@ -8,10 +8,12 @@
     <Copyright>Copyright © 2021 by Hyprsoft Corporation</Copyright>
     <PackageProjectUrl>https://www.hyprsoft.com/</PackageProjectUrl>
     <Version>1.2.0</Version>
+    <LangVersion>8</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Hyprsoft.Web.Client" Version="1.1.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
   </ItemGroup>
   

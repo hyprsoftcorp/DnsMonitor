@@ -1,4 +1,5 @@
 ﻿using Hyprsoft.Dns.Monitor.Providers;
+using System;
 
 namespace Hyprsoft.Dns.Monitor
 {
@@ -6,11 +7,11 @@ namespace Hyprsoft.Dns.Monitor
     {
         public bool IsFirstRun { get; set; } = true;
 
-        public string[] Domains { get; set; } = new string[0];
+        public string[] Domains { get; set; } = Array.Empty<string>();
 
-        public ApiCredentials DnsProviderApiCredentials { get; set; } = new ApiCredentials { ProviderKey = HyprsoftDnsProvider.Key };
+        public DnsProviderApiCredentials DnsProviderApiCredentials { get; set; } = new DnsProviderApiCredentials { ProviderKey = HyprsoftDnsProvider.Key };
 
-        public ApiCredentials PublicIpProviderApiCredentials { get; set; } = new ApiCredentials { ProviderKey = IpifyPublicIpProvider.Key };
+        public PublicIpProviderApiCredentials PublicIpProviderApiCredentials { get; set; } = new PublicIpProviderApiCredentials { ProviderKey = IpifyPublicIpProvider.Key };
 
         public int CheckIntervalMinutes { get; set; } = 10;
     }
