@@ -44,7 +44,7 @@ namespace Hyprsoft.Dns.Monitor.Providers
 
         #region Constructors
 
-        public GoDaddyDnsProvider(ILoggerFactory logger, IPublicIpProvider provider, ApiCredentials credentials, HttpClient httpClient) : base(logger, provider, credentials)
+        public GoDaddyDnsProvider(ILogger<GoDaddyDnsProvider> logger, IPublicIpProvider provider, DnsProviderApiCredentials credentials, HttpClient httpClient) : base(logger, provider, credentials)
         {
             _httpClient = httpClient;
             _httpClient.BaseAddress = new Uri("https://api.godaddy.com/");
@@ -61,12 +61,12 @@ namespace Hyprsoft.Dns.Monitor.Providers
 
         #region Methods
 
-        protected override async Task<string> GetDnsIPAddressAsync(string domainName)
+        protected override async Task<string> GetDnsIpAddressAsync(string domainName)
         {
             return (await GetDnsRecordAsync(domainName)).data;
         }
 
-        protected override async Task SetDnsIPAddressAsync(string domainName, string ip)
+        protected override async Task SetDnsIpAddressAsync(string domainName, string ip)
         {
             // It's possible that changes have been made to the DNS record (i.e. TTL, etc.) since we last fetched it so let's fetch it again before we update.
             var record = await GetDnsRecordAsync(domainName);
@@ -88,7 +88,7 @@ namespace Hyprsoft.Dns.Monitor.Providers
                 return JsonConvert.DeserializeObject<List<DnsRecord>>(await response.Content.ReadAsStringAsync()).First();
         }
 
-        private string BuildApiEndpoint(string domainName)
+       private static string BuildApiEndpoint(string domainName)
         {
             return $"v1/domains/{domainName.Substring(domainName.IndexOf(".") + 1)}/records/A/{domainName.Substring(0, domainName.IndexOf("."))}";
         }

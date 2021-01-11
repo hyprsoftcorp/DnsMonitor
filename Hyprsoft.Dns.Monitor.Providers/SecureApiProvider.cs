@@ -6,9 +6,9 @@ namespace Hyprsoft.Dns.Monitor.Providers
     {
         #region Constructors
 
-        public SecureApiProvider(ILoggerFactory logger, ApiCredentials credentials)
+        public SecureApiProvider(ILogger logger, ApiCredentials credentials)
         {
-            Logger = logger.CreateLogger(GetType());
+            Logger = logger;
             Credentials = credentials;
         }
 
