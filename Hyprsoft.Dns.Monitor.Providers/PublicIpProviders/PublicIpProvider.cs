@@ -9,11 +9,11 @@ namespace Hyprsoft.Dns.Monitor.Providers
         Task<string> GetPublicIPAddressAsync();
     }
 
-    public abstract class PublicIpProvider : SecureApiProvider, IPublicIpProvider
+    public abstract class PublicIpProvider : ApiProvider, IPublicIpProvider
     {
         #region Constructors
 
-        public PublicIpProvider(ILogger logger, PublicIpProviderApiCredentials credentials, HttpClient httpClient) : base(logger, credentials) => HttpClient = httpClient;
+        public PublicIpProvider(ILogger logger, HttpClient httpClient) : base(logger) => HttpClient = httpClient;
 
         #endregion
 

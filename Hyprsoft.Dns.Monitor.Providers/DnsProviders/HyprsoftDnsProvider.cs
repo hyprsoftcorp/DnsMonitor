@@ -8,7 +8,7 @@ namespace Hyprsoft.Dns.Monitor.Providers
     {
         #region Constructors
 
-        public HyprsoftDnsProvider(ILogger<HyprsoftDnsProvider> logger, IPublicIpProvider provider, DnsProviderApiCredentials credentials) : base(logger, provider, credentials) { }
+        public HyprsoftDnsProvider(ILogger<HyprsoftDnsProvider> logger, IPublicIpProvider provider) : base(logger, provider) { }
 
         #endregion
 

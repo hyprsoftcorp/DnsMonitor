@@ -9,7 +9,7 @@ namespace Hyprsoft.Dns.Monitor.Providers
         Task CheckForChangesAsync(string[] domainNames);
     }
 
-    public abstract class DnsProvider : SecureApiProvider, IDnsProvider
+    public abstract class DnsProvider : ApiProvider, IDnsProvider
     {
         #region Fields
 
@@ -20,7 +20,7 @@ namespace Hyprsoft.Dns.Monitor.Providers
 
         #region Constructors
 
-        public DnsProvider(ILogger logger, IPublicIpProvider provider, DnsProviderApiCredentials credentials) : base(logger, credentials) => _publicIpProvider = provider;
+        public DnsProvider(ILogger logger, IPublicIpProvider provider) : base(logger) => _publicIpProvider = provider;
 
         #endregion
 

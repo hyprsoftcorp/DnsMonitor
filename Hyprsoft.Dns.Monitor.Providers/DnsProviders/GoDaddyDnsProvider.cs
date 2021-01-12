@@ -44,7 +44,7 @@ namespace Hyprsoft.Dns.Monitor.Providers
 
         #region Constructors
 
-        public GoDaddyDnsProvider(ILogger<GoDaddyDnsProvider> logger, IPublicIpProvider provider, DnsProviderApiCredentials credentials, HttpClient httpClient) : base(logger, provider, credentials)
+        public GoDaddyDnsProvider(ILogger<GoDaddyDnsProvider> logger, IPublicIpProvider provider, DnsProviderApiCredentials credentials, HttpClient httpClient) : base(logger, provider)
         {
             _httpClient = httpClient;
             _httpClient.BaseAddress = new Uri("https://api.godaddy.com/");
@@ -61,10 +61,7 @@ namespace Hyprsoft.Dns.Monitor.Providers
 
         #region Methods
 
-        protected override async Task<string> GetDnsIpAddressAsync(string domainName)
-        {
-            return (await GetDnsRecordAsync(domainName)).data;
-        }
+        protected override async Task<string> GetDnsIpAddressAsync(string domainName) => (await GetDnsRecordAsync(domainName)).data;
 
         protected override async Task SetDnsIpAddressAsync(string domainName, string ip)
         {
@@ -88,10 +85,7 @@ namespace Hyprsoft.Dns.Monitor.Providers
                 return JsonConvert.DeserializeObject<List<DnsRecord>>(await response.Content.ReadAsStringAsync()).First();
         }
 
-       private static string BuildApiEndpoint(string domainName)
-        {
-            return $"v1/domains/{domainName.Substring(domainName.IndexOf(".") + 1)}/records/A/{domainName.Substring(0, domainName.IndexOf("."))}";
-        }
+        private static string BuildApiEndpoint(string domainName) => $"v1/domains/{domainName.Substring(domainName.IndexOf(".") + 1)}/records/A/{domainName.Substring(0, domainName.IndexOf("."))}";
 
         #endregion
     }
