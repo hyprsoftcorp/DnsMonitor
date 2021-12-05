@@ -1,12 +1,10 @@
 ﻿using Hyprsoft.Dns.Monitor.Providers;
 using System;
 
-namespace Hyprsoft.Dns.Monitor
+namespace Hyprsoft.Dns.Monitor.Providers
 {
-    public class MonitorSettings
+    public class DnsMonitorSettings
     {
-        public bool IsFirstRun { get; set; } = true;
-
         public string[] Domains { get; set; } = Array.Empty<string>();
 
         public DnsProviderApiCredentials DnsProviderApiCredentials { get; set; } = new DnsProviderApiCredentials { ProviderKey = HyprsoftDnsProvider.Key };

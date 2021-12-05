@@ -1,5 +1,4 @@
 {
-  "IsFirstRun": true,
   "Domains": [ "www.hyprsoft.com" ],
   "DnsProviderApiCredentials": {
     "ProviderKey": "HyprsoftDnsProvider",

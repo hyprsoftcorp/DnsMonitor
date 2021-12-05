@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
+using System.IO;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,7 +14,7 @@ namespace Hyprsoft.Dns.Monitor
         #region Fields
 
         private readonly ILogger<Worker> _logger;
-        private readonly MonitorSettings _settings;
+        private readonly DnsMonitorSettings _settings;
         private readonly IPublicIpProvider _publicIpProvider;
         private readonly IDnsProvider _dnsProvider;
 
@@ -21,7 +22,7 @@ namespace Hyprsoft.Dns.Monitor
 
         #region Constructors
 
-        public Worker(ILogger<Worker> logger, MonitorSettings settings, IPublicIpProvider publicIpProvider, IDnsProvider dnsProvider)
+        public Worker(ILogger<Worker> logger, DnsMonitorSettings settings, IPublicIpProvider publicIpProvider, IDnsProvider dnsProvider)
         {
             _logger = logger;
             _settings = settings;
@@ -39,9 +40,11 @@ namespace Hyprsoft.Dns.Monitor
             var version = (((AssemblyInformationalVersionAttribute)typeof(Worker).Assembly.GetCustomAttribute(typeof(AssemblyInformationalVersionAttribute))).InformationalVersion);
             var providersVersion = (((AssemblyInformationalVersionAttribute)typeof(PublicIpProvider).Assembly.GetCustomAttribute(typeof(AssemblyInformationalVersionAttribute))).InformationalVersion); ;
             _logger.LogInformation($"{product} v{version} | {product} Providers v{providersVersion}");
+            _logger.LogInformation($"Current configuration file is '{Path.Combine(AppContext.BaseDirectory, Program.ConfigurationFilename)}'.");
 
             if (_settings.Domains.Length <= 0)
-                _logger.LogWarning($"The '{Program.ConfigurationFilename}' does not contain any domains.  At least one domain should be defined.");
+                _logger.LogWarning($"The '{Program.ConfigurationFilename}' does NOT contain any domains.  At least one domain should be defined.");
+
             _logger.LogInformation($"Checking for public IP changes every '{_settings.CheckIntervalMinutes}' minutes using IP provider '{_publicIpProvider.GetType().Name}' and DNS provider '{_dnsProvider.GetType().Name}' for domains '{String.Join(", ", _settings.Domains)}'.");
 
             return base.StartAsync(cancellationToken);
