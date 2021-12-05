@@ -10,12 +10,6 @@ namespace Hyprsoft.Dns.Monitor
 {
     class Program
     {
-        #region Properties
-
-        public const string ConfigurationFilename = "config.json";
-
-        #endregion
-
         #region Methods
 
         static void Main(string[] args) => CreateHostBuilder(args).Build().Run();
@@ -26,14 +20,24 @@ namespace Hyprsoft.Dns.Monitor
                 .UseWindowsService()
                 .UseSystemd()
                 .ConfigureLogging(builder => builder.AddSimpleFileLogger())
-                .ConfigureAppConfiguration(builder => builder.AddJsonFile(Path.Combine(AppContext.BaseDirectory, ConfigurationFilename), true))
-                .ConfigureServices((hostContext, services) =>
+               .ConfigureAppConfiguration(builder => builder.AddJsonFile(Path.Combine(AppContext.BaseDirectory, "appsettings.json"), true))
+               .ConfigureServices((hostContext, services) =>
                 {
-                    services.AddDnsMonitor(settings => hostContext.Configuration.Bind(settings));
-                    services.AddHostedService<Worker>();
+                    var monitorSettings = new MonitorSettings();
+                    hostContext.Configuration.GetSection(nameof(MonitorSettings)).Bind(monitorSettings);
+                    services.AddSingleton(monitorSettings);
+
+                    services.AddDnsMonitor(settings =>
+                    {
+                        settings.Domains = monitorSettings.Domains;
+                        settings.DnsProviderApiCredentials = monitorSettings.DnsProviderApiCredentials;
+                        settings.PublicIpProviderApiCredentials = monitorSettings.PublicIpProviderApiCredentials;
+
+                        services.AddHostedService<Worker>();
+                    });
                 });
         }
-
+        
         #endregion
     }
 }

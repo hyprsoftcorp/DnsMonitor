@@ -44,11 +44,11 @@ namespace Hyprsoft.Dns.Monitor.Providers
 
         #region Constructors
 
-        public GoDaddyDnsProvider(ILogger<GoDaddyDnsProvider> logger, IPublicIpProvider provider, DnsProviderApiCredentials credentials, HttpClient httpClient) : base(logger, provider)
+        public GoDaddyDnsProvider(ILogger<GoDaddyDnsProvider> logger, IPublicIpProvider provider, ProviderSettings settings, HttpClient httpClient) : base(logger, provider)
         {
             _httpClient = httpClient;
             _httpClient.BaseAddress = new Uri("https://api.godaddy.com/");
-            _httpClient.DefaultRequestHeaders.Add("Authorization", $"sso-key {credentials.ApiKey}:{credentials.ApiSecret}");
+            _httpClient.DefaultRequestHeaders.Add("Authorization", $"sso-key {settings.DnsProviderApiCredentials.ApiKey}:{settings.DnsProviderApiCredentials.ApiSecret}");
         }
 
         #endregion

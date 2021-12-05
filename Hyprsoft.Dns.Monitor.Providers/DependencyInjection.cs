@@ -5,14 +5,11 @@ namespace Hyprsoft.Dns.Monitor.Providers
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddDnsMonitor(this IServiceCollection services, Action<DnsMonitorSettings> configure)
+        public static IServiceCollection AddDnsMonitor(this IServiceCollection services, Action<ProviderSettings> configure)
         {
-            var settings = new DnsMonitorSettings();
+            var settings = new ProviderSettings();
             configure?.Invoke(settings);
-
             services.AddSingleton(settings);
-            services.AddSingleton(settings.PublicIpProviderApiCredentials);
-            services.AddSingleton(settings.DnsProviderApiCredentials);
 
             services.AddHttpClient();
 

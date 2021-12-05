@@ -17,34 +17,36 @@ The service ensures that anytime our public IP address changes, our DNS records 
 1. [HyprsoftDnsProvider](https://www.hyprsoft.com/) - No authentication required and can be used for testing.  This provider returns random IP addresses.
 2. [GoDaddyDnsProvider](https://www.godaddy.com/) - Requires a [GoDaddy API key and secret](https://developer.godaddy.com/keys).
 
-## Sample Service Settings File
-The 'config.json' file is required and here is a sample.  This file will contain sensitive/secret information.
+## Sample Settings File
+The 'appsetings.json' file is required and here is a sample.  <b>This file COULD contain sensitive/secret information</b>.
 ~~~json
 {
-  "Domains": [ "subdomain1.mydomain.com", "subdomain2.mydomain.com" ],
-  "DnsProviderApiCredentials": {
-    "ProviderKey": "HyprsoftDnsProvider",
-    "ApiKey": "[optional value if API authentication is required]",
-    "ApiSecret": "[optional value if API authentication is required]"
-  },
-  "PublicIpProviderApiCredentials": {
-    "ProviderKey": "IpifyPublicIpProvider",
-    "ApiKey": "[optional value if API authentication is required]",
-    "ApiSecret": "[optional value if API authentication is required]"
-  },
-  "CheckIntervalMinutes": 10
+  "MonitorSettings": {
+    "Domains": [ "www.hyprsoft.com" ],
+    "DnsProviderApiCredentials": {
+      "ProviderKey": "HyprsoftDnsProvider",
+      "ApiKey": null,
+      "ApiSecret": null
+    },
+    "PublicIpProviderApiCredentials": {
+      "ProviderKey": "IpifyPublicIpProvider",
+      "ApiKey": null,
+      "ApiSecret": null
+    },
+    "CheckIntervalMinutes": 10
+  }
 }
 ~~~
 
 ## Docker Setup
-See our [Docker Hub](https://hub.docker.com/repository/docker/hyprsoft/hyprsoft.dns.monitor) for more details.  Make sure to adjust your host volume mapping file path for the 'config.json' file.
+See our [Docker Hub](https://hub.docker.com/repository/docker/hyprsoft/hyprsoft.dns.monitor) for more details.  <b>Make sure to adjust your host volume mapping file path for the 'appsetings.json' file</b>.
 ### Linux (amd64)
 ```
-docker run -it -d --name dnsmonitor --restart always -v C:\Docker\dnsmonitor\config.json:/app/config.json hyprsoft/hyprsoft.dns.monitor:latest
+docker run -it -d --name dnsmonitor --restart always -v C:\Docker\dnsmonitor\appsettings.json:/app/appsettings.json hyprsoft/hyprsoft.dns.monitor:1.3.0-linux-amd64
 ```
 ### Linux (arm64)
 ```
-docker run -it -d --name dnsmonitor --restart always -v /home/pi/dnsmonitor/config.json:/app/config.json hyprsoft/hyprsoft.dns.monitor:linux-arm64
+docker run -it -d --name dnsmonitor --restart always -v /home/pi/dnsmonitor/appsettings.json:/app/appsettings.json hyprsoft/hyprsoft.dns.monitor:1.3.0-linux-arm64
 ```
 
 ## Automatic Service Startup on Linux

@@ -17,7 +17,7 @@ namespace Hyprsoft.Dns.Monitor.Providers
 
         #region Constructors
 
-        public HyprsoftPublicIpProvider(ILogger<HyprsoftPublicIpProvider> logger, PublicIpProviderApiCredentials credentials, HttpClient httpClient) : base(logger, httpClient) => _client = new HyprsoftClient(credentials.ApiKey, credentials.ApiSecret);
+        public HyprsoftPublicIpProvider(ILogger<HyprsoftPublicIpProvider> logger, ProviderSettings settings, HttpClient httpClient) : base(logger, httpClient) => _client = new HyprsoftClient(settings.PublicIpProviderApiCredentials.ApiKey, settings.PublicIpProviderApiCredentials.ApiSecret);
 
         #endregion
 
