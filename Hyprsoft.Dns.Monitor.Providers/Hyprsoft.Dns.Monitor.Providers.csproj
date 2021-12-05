@@ -9,10 +9,11 @@
     <PackageProjectUrl>https://www.hyprsoft.com/</PackageProjectUrl>
     <Version>1.3.0</Version>
     <LangVersion>9</LangVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Hyprsoft.Web.Client" Version="1.1.2" />
+    <PackageReference Include="Hyprsoft.Web.Client" Version="1.1.4" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />

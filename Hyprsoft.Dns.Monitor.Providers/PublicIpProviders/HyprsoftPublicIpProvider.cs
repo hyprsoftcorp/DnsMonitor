@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using System;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Hyprsoft.Dns.Monitor.Providers
@@ -29,7 +30,7 @@ namespace Hyprsoft.Dns.Monitor.Providers
 
         #region Methods
 
-        public async override Task<string> GetPublicIPAddressAsync() => await _client.GetPublicIPAddressAsync();
+        public async override Task<string> GetPublicIPAddressAsync(CancellationToken cancellationToken = default) => await _client.GetPublicIPAddressAsync(cancellationToken);
 
         #endregion
 

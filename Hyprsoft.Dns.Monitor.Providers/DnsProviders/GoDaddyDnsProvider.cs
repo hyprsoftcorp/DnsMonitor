@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Hyprsoft.Dns.Monitor.Providers
@@ -13,6 +14,7 @@ namespace Hyprsoft.Dns.Monitor.Providers
     {
         #region GoDaddy Dns Record Class
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
         private class DnsRecord
         {
             public string data { get; set; } = String.Empty;
@@ -61,9 +63,9 @@ namespace Hyprsoft.Dns.Monitor.Providers
 
         #region Methods
 
-        protected override async Task<string> GetDnsIpAddressAsync(string domainName) => (await GetDnsRecordAsync(domainName)).data;
+        protected override async Task<string> GetDnsIpAddressAsync(string domainName, CancellationToken cancellationToken = default) => (await GetDnsRecordAsync(domainName)).data;
 
-        protected override async Task SetDnsIpAddressAsync(string domainName, string ip)
+        protected override async Task SetDnsIpAddressAsync(string domainName, string ip, CancellationToken cancellationToken = default)
         {
             // It's possible that changes have been made to the DNS record (i.e. TTL, etc.) since we last fetched it so let's fetch it again before we update.
             var record = await GetDnsRecordAsync(domainName);
@@ -71,7 +73,7 @@ namespace Hyprsoft.Dns.Monitor.Providers
                 return;
 
             record.data = ip;
-            var response = await _httpClient.PutAsync(BuildApiEndpoint(domainName), new StringContent(JsonConvert.SerializeObject(new[] { record }), Encoding.UTF8, "application/json"));
+            var response = await _httpClient.PutAsync(BuildApiEndpoint(domainName), new StringContent(JsonConvert.SerializeObject(new[] { record }), Encoding.UTF8, "application/json"), cancellationToken);
             if (!response.IsSuccessStatusCode)
                 throw new HttpRequestException($"Unable to set DNS record.  Reason: {response.ReasonPhrase}.  Details: {await response.Content.ReadAsStringAsync() ?? "none."}");
         }

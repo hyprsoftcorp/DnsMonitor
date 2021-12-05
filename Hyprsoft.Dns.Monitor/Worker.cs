@@ -35,9 +35,10 @@ namespace Hyprsoft.Dns.Monitor
 
         public override Task StartAsync(CancellationToken cancellationToken)
         {
-            var product = (((AssemblyProductAttribute)typeof(Worker).Assembly.GetCustomAttribute(typeof(AssemblyProductAttribute))).Product);
-            var version = (((AssemblyInformationalVersionAttribute)typeof(Worker).Assembly.GetCustomAttribute(typeof(AssemblyInformationalVersionAttribute))).InformationalVersion);
-            var providersVersion = (((AssemblyInformationalVersionAttribute)typeof(PublicIpProvider).Assembly.GetCustomAttribute(typeof(AssemblyInformationalVersionAttribute))).InformationalVersion); ;
+            var product = (typeof(Worker).Assembly.GetCustomAttribute(typeof(AssemblyProductAttribute)) as AssemblyProductAttribute)?.Product ?? "Hyprsoft Dns Monitor";
+            var version = (typeof(Worker).Assembly.GetCustomAttribute(typeof(AssemblyInformationalVersionAttribute)) as AssemblyInformationalVersionAttribute)?.InformationalVersion ?? "0.0.0";
+            var providersVersion = (typeof(PublicIpProvider).Assembly.GetCustomAttribute(typeof(AssemblyInformationalVersionAttribute)) as AssemblyInformationalVersionAttribute)?.InformationalVersion ?? "0.0.0";
+            
             _logger.LogInformation($"{product} v{version} | {product} Providers v{providersVersion}");
 
             if (_settings.Domains.Length <= 0)
@@ -55,7 +56,7 @@ namespace Hyprsoft.Dns.Monitor
                 try
                 {
                     _logger.LogInformation("Checking for public IP address changes.");
-                    await _dnsProvider.CheckForChangesAsync(_settings.Domains);
+                    await _dnsProvider.CheckForChangesAsync(_settings.Domains, stoppingToken);
                 }
                 catch (Exception ex)
                 {
@@ -68,7 +69,7 @@ namespace Hyprsoft.Dns.Monitor
 
         public override Task StopAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"Worker exiting normally.");
+            _logger.LogInformation("Worker exiting normally.");
             return base.StopAsync(cancellationToken);
         }
 

@@ -1,12 +1,13 @@
 ﻿using Microsoft.Extensions.Logging;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Hyprsoft.Dns.Monitor.Providers
 {
     public interface IPublicIpProvider
     {
-        Task<string> GetPublicIPAddressAsync();
+        Task<string> GetPublicIPAddressAsync(CancellationToken cancellationToken);
     }
 
     public abstract class PublicIpProvider : ApiProvider, IPublicIpProvider
@@ -25,7 +26,7 @@ namespace Hyprsoft.Dns.Monitor.Providers
 
         #region Methods
 
-        public abstract Task<string> GetPublicIPAddressAsync();
+        public abstract Task<string> GetPublicIPAddressAsync(CancellationToken cancellationToken);
 
         #endregion
     }

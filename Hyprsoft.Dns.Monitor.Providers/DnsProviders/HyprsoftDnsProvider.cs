@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Hyprsoft.Dns.Monitor.Providers
@@ -20,7 +21,7 @@ namespace Hyprsoft.Dns.Monitor.Providers
 
         #region Methods
 
-        protected override Task<string> GetDnsIpAddressAsync(string domainName)
+        protected override Task<string> GetDnsIpAddressAsync(string domainName, CancellationToken cancellationToken = default)
         {
             Logger.LogWarning("This DNS provider is for testing purposes only and generates random IP addresses.");
 
@@ -28,7 +29,7 @@ namespace Hyprsoft.Dns.Monitor.Providers
             return Task.FromResult($"{rng.Next(1, 256)}.{rng.Next(1, 256)}.{rng.Next(1, 256)}.{rng.Next(1, 256)}");
         }
 
-        protected override Task SetDnsIpAddressAsync(string domainName, string ip)
+        protected override Task SetDnsIpAddressAsync(string domainName, string ip, CancellationToken cancellationToken = default)
         {
             Logger.LogWarning("This DNS provider is for testing purposes only and does NOT update any DNS records.");
             return Task.CompletedTask;

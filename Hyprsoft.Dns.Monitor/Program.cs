@@ -20,8 +20,8 @@ namespace Hyprsoft.Dns.Monitor
                 .UseWindowsService()
                 .UseSystemd()
                 .ConfigureLogging(builder => builder.AddSimpleFileLogger())
-               .ConfigureAppConfiguration(builder => builder.AddJsonFile(Path.Combine(AppContext.BaseDirectory, "appsettings.json"), true))
-               .ConfigureServices((hostContext, services) =>
+                .ConfigureAppConfiguration(builder => builder.AddJsonFile(Path.Combine(AppContext.BaseDirectory, "appsettings.json"), true))
+                .ConfigureServices((hostContext, services) =>
                 {
                     var monitorSettings = new MonitorSettings();
                     hostContext.Configuration.GetSection(nameof(MonitorSettings)).Bind(monitorSettings);
