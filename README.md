@@ -18,7 +18,7 @@ The service ensures that anytime our public IP address changes, our DNS records 
 2. [GoDaddyDnsProvider](https://www.godaddy.com/) - Requires a [GoDaddy API key and secret](https://developer.godaddy.com/keys).
 
 ## Sample Settings File
-The 'appsetings.json' file is required and here is a sample.  <b>This file COULD contain sensitive/secret information</b>.
+The 'appsettings.json' file is required and here is a sample.  <b>This file COULD contain sensitive/secret information</b>.  Protect it accordingly!
 ~~~json
 {
   "MonitorSettings": {
@@ -39,7 +39,7 @@ The 'appsetings.json' file is required and here is a sample.  <b>This file COULD
 ~~~
 
 ## Docker Setup
-See our [Docker Hub](https://hub.docker.com/repository/docker/hyprsoft/hyprsoft.dns.monitor) for more details.  <b>Make sure to adjust your host volume mapping file path for the 'appsetings.json' file</b>.
+See our [Docker Hub](https://hub.docker.com/repository/docker/hyprsoft/hyprsoft.dns.monitor) for more details.  <b>Make sure to adjust your host volume mapping file path for the 'appsettings.json' file</b>.
 ### Linux (amd64)
 ```
 docker run -it -d --name dnsmonitor --restart always -v C:\Docker\dnsmonitor\appsettings.json:/app/appsettings.json hyprsoft/hyprsoft.dns.monitor:1.3.0-linux-amd64
