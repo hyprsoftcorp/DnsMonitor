@@ -1,4 +1,4 @@
 # linux-arm64
-FROM mcr.microsoft.com/dotnet/runtime:5.0.12-bullseye-slim-arm64v8
-COPY Hyprsoft.Dns.Monitor/bin/Release/net5.0/linux-arm64/publish/ app/
+FROM mcr.microsoft.com/dotnet/runtime:7.0.11-bullseye-slim-arm64v8
+COPY Hyprsoft.Dns.Monitor/bin/Release/net7.0/linux-arm64/publish/ app/
 ENTRYPOINT ["dotnet", "app/Hyprsoft.Dns.Monitor.dll"]
