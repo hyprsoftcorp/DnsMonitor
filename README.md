@@ -1,11 +1,11 @@
 # Introduction 
-This .NET 5.0 "worker" background service monitors your public IP address for changes and updates the appropriate DNS records to allow remote access to your home/office network.
+This .NET 7.0 "worker" background service monitors your public IP address for changes and updates the appropriate DNS records to allow remote access to your home/office network.
 It performs very basic functions similar to [changeip.com](https://changeip.com), [dyndns.com](https://dyndns.com), [easydns.com](https://easydns.com), and [no-ip.com](https://noip.com).
 
 ## Getting Started
 <b>This service must be run inside your home/office network, not in the cloud.</b>
 
-Since .NET 5 supports a number of operating systems, this app can be run almost anywhere.
+Since .NET 7 supports a number of operating systems, this app can be run almost anywhere.
 In our test case we are running this service on a Raspberry PI 4 (4GB) using the Rasberry PI OS Lite (Bullseye).
 The service ensures that anytime our public IP address changes, our DNS records are automatically updated so that we can always access various services on our network from anywhere in the world.
 
@@ -42,11 +42,11 @@ The 'appsettings.json' file is required and here is a sample.  <b>This file COUL
 See our [Docker Hub](https://hub.docker.com/repository/docker/hyprsoft/hyprsoft.dns.monitor) for more details.  <b>Make sure to adjust your host volume mapping file path for the 'appsettings.json' file</b>.
 ### Linux (amd64)
 ```
-docker run -it -d --name dnsmonitor --restart always -v C:\Docker\dnsmonitor\appsettings.json:/app/appsettings.json hyprsoft/hyprsoft.dns.monitor:1.3.0-linux-amd64
+docker run -it -d --name dnsmonitor --restart always -v C:\Docker\dnsmonitor\appsettings.json:/app/appsettings.json hyprsoft/hyprsoft.dns.monitor:1.3.1-linux-amd64
 ```
 ### Linux (arm64)
 ```
-docker run -it -d --name dnsmonitor --restart always -v /home/pi/dnsmonitor/appsettings.json:/app/appsettings.json hyprsoft/hyprsoft.dns.monitor:1.3.0-linux-arm64
+docker run -it -d --name dnsmonitor --restart always -v /home/pi/dnsmonitor/appsettings.json:/app/appsettings.json hyprsoft/hyprsoft.dns.monitor:1.3.1-linux-arm64
 ```
 
 ## Automatic Service Startup on Linux
