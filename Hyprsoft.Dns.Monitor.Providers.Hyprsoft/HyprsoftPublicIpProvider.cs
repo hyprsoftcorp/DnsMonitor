@@ -1,24 +1,21 @@
-﻿using Hyprsoft.Web.Client;
+﻿using Hyprsoft.Dns.Monitor.Providers.Common;
+using Hyprsoft.Web.Client;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Hyprsoft.Dns.Monitor.Providers
 {
-    public class HyprsoftPublicIpProvider : PublicIpProvider, IDisposable
+    public class HyprsoftPublicIpProvider(ILogger<HyprsoftPublicIpProvider> logger, ProviderSettings settings) : PublicIpProvider(logger), IDisposable
     {
         #region Fields
 
         private bool _isDisposed;
-        private readonly HyprsoftClient _client;
+        private readonly HyprsoftClient _client = new(settings.PublicIpProviderApiCredentials.ApiKey, settings.PublicIpProviderApiCredentials.ApiSecret);
 
         #endregion
-
         #region Constructors
-
-        public HyprsoftPublicIpProvider(ILogger<HyprsoftPublicIpProvider> logger, ProviderSettings settings, HttpClient httpClient) : base(logger, httpClient) => _client = new HyprsoftClient(settings.PublicIpProviderApiCredentials.ApiKey, settings.PublicIpProviderApiCredentials.ApiSecret);
 
         #endregion
 

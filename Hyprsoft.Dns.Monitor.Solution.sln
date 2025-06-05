@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29209.62
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36127.28
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hyprsoft.Dns.Monitor", "Hyprsoft.DNS.Monitor\Hyprsoft.Dns.Monitor.csproj", "{B9DE6CFE-44D0-4D95-B87C-29D7B2F474E1}"
 EndProject
@@ -13,7 +13,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hyprsoft.Dns.Monitor.Providers", "Hyprsoft.Dns.Monitor.Providers\Hyprsoft.Dns.Monitor.Providers.csproj", "{2EDAA1A0-69E1-4345-B573-2A45D5688D48}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hyprsoft.Dns.Monitor.Providers.Common", "Hyprsoft.Dns.Monitor.Providers.Common\Hyprsoft.Dns.Monitor.Providers.Common.csproj", "{2EDAA1A0-69E1-4345-B573-2A45D5688D48}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hyprsoft.Dns.Monitor.Providers.Hyprsoft", "Hyprsoft.Dns.Monitor.Providers.Hyprsoft\Hyprsoft.Dns.Monitor.Providers.Hyprsoft.csproj", "{9AB33E58-166A-4E2D-8B14-EB236AE7443D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hyprsoft.Dns.Monitor.Providers.GoDaddy", "Hyprsoft.Dns.Monitor.Providers.GoDaddy\Hyprsoft.Dns.Monitor.Providers.GoDaddy.csproj", "{0C26137D-75B0-474E-9FFD-11EDEC3536FD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hyprsoft.Dns.Monitor.Providers.Cloudflare", "Hyprsoft.Dns.Monitor.Providers.Cloudflare\Hyprsoft.Dns.Monitor.Providers.Cloudflare.csproj", "{DDF95C20-F42A-48E1-90A5-4D93D4C66C34}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +35,18 @@ Global
 		{2EDAA1A0-69E1-4345-B573-2A45D5688D48}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2EDAA1A0-69E1-4345-B573-2A45D5688D48}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2EDAA1A0-69E1-4345-B573-2A45D5688D48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AB33E58-166A-4E2D-8B14-EB236AE7443D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AB33E58-166A-4E2D-8B14-EB236AE7443D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AB33E58-166A-4E2D-8B14-EB236AE7443D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AB33E58-166A-4E2D-8B14-EB236AE7443D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C26137D-75B0-474E-9FFD-11EDEC3536FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C26137D-75B0-474E-9FFD-11EDEC3536FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C26137D-75B0-474E-9FFD-11EDEC3536FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C26137D-75B0-474E-9FFD-11EDEC3536FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDF95C20-F42A-48E1-90A5-4D93D4C66C34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDF95C20-F42A-48E1-90A5-4D93D4C66C34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDF95C20-F42A-48E1-90A5-4D93D4C66C34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDF95C20-F42A-48E1-90A5-4D93D4C66C34}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

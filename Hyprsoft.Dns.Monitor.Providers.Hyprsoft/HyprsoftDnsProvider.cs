@@ -1,18 +1,13 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Hyprsoft.Dns.Monitor.Providers.Common;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Hyprsoft.Dns.Monitor.Providers
 {
-    public class HyprsoftDnsProvider : DnsProvider
+    public class HyprsoftDnsProvider(ILogger<HyprsoftDnsProvider> logger, IPublicIpProvider provider) : DnsProvider(logger, provider)
     {
-        #region Constructors
-
-        public HyprsoftDnsProvider(ILogger<HyprsoftDnsProvider> logger, IPublicIpProvider provider) : base(logger, provider) { }
-
-        #endregion
-
         #region Properties
 
         public const string Key = nameof(HyprsoftDnsProvider);

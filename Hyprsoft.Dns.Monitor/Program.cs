@@ -1,4 +1,5 @@
 ﻿using Hyprsoft.Dns.Monitor.Providers;
+using Hyprsoft.Dns.Monitor.Providers.Common;
 using Hyprsoft.Logging.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,14 +28,21 @@ namespace Hyprsoft.Dns.Monitor
                     hostContext.Configuration.GetSection(nameof(MonitorSettings)).Bind(monitorSettings);
                     services.AddSingleton(monitorSettings);
 
-                    services.AddDnsMonitor(settings =>
+                    void ConfigureDnsMonitor(ProviderSettings settings)
                     {
                         settings.Domains = monitorSettings.Domains;
                         settings.DnsProviderApiCredentials = monitorSettings.DnsProviderApiCredentials;
                         settings.PublicIpProviderApiCredentials = monitorSettings.PublicIpProviderApiCredentials;
+                    }
 
-                        services.AddHostedService<Worker>();
-                    });
+                    _ = monitorSettings.DnsProvider switch
+                    {
+                        CloudflareDnsProvider.Key => services.AddCloudflareDnsMonitor(ConfigureDnsMonitor),
+                        GoDaddyDnsProvider.Key => services.AddGoDaddyDnsMonitor(ConfigureDnsMonitor),
+                        _ => services.AddHyprsoftDnsMonitor(ConfigureDnsMonitor)
+                    };
+
+                    services.AddHostedService<Worker>();
                 });
         }
         

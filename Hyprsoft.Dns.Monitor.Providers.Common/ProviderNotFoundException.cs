@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Hyprsoft.Dns.Monitor.Providers
+namespace Hyprsoft.Dns.Monitor.Providers.Common
 {
     public class ProviderNotFoundException : Exception
     {

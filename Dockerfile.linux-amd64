@@ -1,4 +1,4 @@
 # linux
-FROM mcr.microsoft.com/dotnet/runtime:8.0
-COPY Hyprsoft.Dns.Monitor/bin/Release/net8.0/publish/ app/
+FROM mcr.microsoft.com/dotnet/runtime:9.0.5
+COPY Hyprsoft.Dns.Monitor/bin/Release/net9.0/linux-x64/publish/ app/
 ENTRYPOINT ["dotnet", "app/Hyprsoft.Dns.Monitor.dll"]
