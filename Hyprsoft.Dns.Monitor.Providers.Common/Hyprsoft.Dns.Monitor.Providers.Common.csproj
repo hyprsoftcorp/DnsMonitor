@@ -5,18 +5,18 @@
     <Authors>Hyprsoft Corporation</Authors>
     <Product>Hyprsoft Dns Monitor Providers</Product>
     <Description>Hyprsoft Dns Monitor Providers</Description>
-    <Copyright>Copyright © 2024 by Hyprsoft Corporation</Copyright>
+    <Copyright>Copyright © 2025 by Hyprsoft Corporation</Copyright>
     <PackageProjectUrl>https://www.hyprsoft.com/</PackageProjectUrl>
-    <Version>1.3.2</Version>
+    <Version>2.0.0</Version>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Hyprsoft.Web.Client" Version="1.1.8" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.5" />
+    <PackageReference Include="System.Text.Json" Version="9.0.5" />
   </ItemGroup>
   
 </Project>

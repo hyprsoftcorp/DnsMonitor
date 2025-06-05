@@ -1,27 +1,29 @@
 ﻿using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Hyprsoft.Dns.Monitor.Providers
+namespace Hyprsoft.Dns.Monitor.Providers.Common
 {
     public interface IDnsProvider
     {
         Task CheckForChangesAsync(string[] domainNames, CancellationToken cancellationToken);
     }
 
-    public abstract class DnsProvider : ApiProvider, IDnsProvider
+    public abstract class DnsProvider(ILogger logger, IPublicIpProvider provider) : ApiProvider(logger), IDnsProvider
     {
         #region Fields
 
-        private readonly IPublicIpProvider _publicIpProvider;
-        private readonly Dictionary<string, string> _dnsIpAddresses = new();
+        private readonly IPublicIpProvider _publicIpProvider = provider;
+        private readonly Dictionary<string, string> _dnsIpAddresses = [];
 
         #endregion
 
-        #region Constructors
+        #region Properties
 
-        public DnsProvider(ILogger logger, IPublicIpProvider provider) : base(logger) => _publicIpProvider = provider;
+        protected readonly JsonSerializerOptions JsonSerializerOptions = new() { PropertyNameCaseInsensitive = true };
 
         #endregion
 
@@ -41,7 +43,7 @@ namespace Hyprsoft.Dns.Monitor.Providers
                     Logger.LogInformation($"Current DNS IP address for domain '{domain}' is '{_dnsIpAddresses[domain]}'.");
                 }
 
-                if (_dnsIpAddresses[domain].Equals(publicIpAddress))
+                if (string.Compare(_dnsIpAddresses[domain], publicIpAddress, true) == 0)
                     Logger.LogInformation($"Current public IP address for domain '{domain}' is '{publicIpAddress}'.  No change detected.");
                 else
                 {
@@ -54,6 +56,21 @@ namespace Hyprsoft.Dns.Monitor.Providers
                 if (cancellationToken.IsCancellationRequested)
                     break;
             }   // for each domain.
+        }
+
+        protected (string? SubDomain, string RootDomain) GetDomainParts(string domainName)
+        {
+            var isSubDomain = domainName.Count(x => x == '.') > 1;
+            if (isSubDomain)
+            {
+                var secondToLast = domainName.LastIndexOf('.', domainName.LastIndexOf('.') - 1);
+                var rootDomain = domainName.Substring(secondToLast + 1);
+                var subDomain = domainName.Substring(0, secondToLast);
+
+                return (subDomain, rootDomain);
+            }
+            else
+                return (null, domainName);
         }
 
         protected abstract Task<string> GetDnsIpAddressAsync(string domainName, CancellationToken cancellationToken);
