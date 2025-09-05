@@ -9,10 +9,8 @@ using System.IO;
 
 namespace Hyprsoft.Dns.Monitor
 {
-    class Program
+    static class Program
     {
-        #region Methods
-
         static void Main(string[] args) => CreateHostBuilder(args).Build().Run();
 
         public static IHostBuilder CreateHostBuilder(string[] args)
@@ -45,7 +43,5 @@ namespace Hyprsoft.Dns.Monitor
                     services.AddHostedService<Worker>();
                 });
         }
-        
-        #endregion
     }
 }

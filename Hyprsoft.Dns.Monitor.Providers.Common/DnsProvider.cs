@@ -14,22 +14,12 @@ namespace Hyprsoft.Dns.Monitor.Providers.Common
 
     public abstract class DnsProvider(ILogger logger, IPublicIpProvider provider) : ApiProvider(logger), IDnsProvider
     {
-        #region Fields
-
         private readonly IPublicIpProvider _publicIpProvider = provider;
         private readonly Dictionary<string, string> _dnsIpAddresses = [];
 
-        #endregion
-
-        #region Properties
-
         protected readonly JsonSerializerOptions JsonSerializerOptions = new() { PropertyNameCaseInsensitive = true };
 
-        #endregion
-
-        #region Methods
-
-        public async Task CheckForChangesAsync(string[] domainNames, CancellationToken cancellationToken = default)
+        public async Task CheckForChangesAsync(string[] domainNames, CancellationToken cancellationToken)
         {
             if (domainNames == null || domainNames.Length <= 0)
                 return;
@@ -40,17 +30,17 @@ namespace Hyprsoft.Dns.Monitor.Providers.Common
                 if (!_dnsIpAddresses.ContainsKey(domain))
                 {
                     _dnsIpAddresses[domain] = await GetDnsIpAddressAsync(domain, cancellationToken);
-                    Logger.LogInformation($"Current DNS IP address for domain '{domain}' is '{_dnsIpAddresses[domain]}'.");
+                    Logger.LogInformation("Current DNS IP address for domain '{Domain}' is '{IpAddress}'.", domain, _dnsIpAddresses[domain]);
                 }
 
                 if (string.Compare(_dnsIpAddresses[domain], publicIpAddress, true) == 0)
-                    Logger.LogInformation($"Current public IP address for domain '{domain}' is '{publicIpAddress}'.  No change detected.");
+                    Logger.LogInformation("Current public IP address for domain '{Domain}' is '{IpAddress}'.  No change detected.", domain, publicIpAddress);
                 else
                 {
-                    Logger.LogInformation($"New public IP address '{publicIpAddress}' detected.  Updating DNS record for domain '{domain}'.");
+                    Logger.LogInformation("New public IP address '{IpAddress}' detected.  Updating DNS record for domain '{Domain}'.", publicIpAddress, domain);
                     await SetDnsIpAddressAsync(domain, publicIpAddress, cancellationToken);
                     _dnsIpAddresses[domain] = publicIpAddress;
-                    Logger.LogInformation($"Domain '{domain}' updated successfully to IP address '{_dnsIpAddresses[domain]}'.");
+                    Logger.LogInformation("Domain '{Domain}' updated successfully to IP address '{IpAddress}'.", domain, _dnsIpAddresses[domain]);
                 }
 
                 if (cancellationToken.IsCancellationRequested)
@@ -58,7 +48,7 @@ namespace Hyprsoft.Dns.Monitor.Providers.Common
             }   // for each domain.
         }
 
-        protected (string? SubDomain, string RootDomain) GetDomainParts(string domainName)
+        protected static (string? SubDomain, string RootDomain) GetDomainParts(string domainName)
         {
             var isSubDomain = domainName.Count(x => x == '.') > 1;
             if (isSubDomain)
@@ -76,7 +66,5 @@ namespace Hyprsoft.Dns.Monitor.Providers.Common
         protected abstract Task<string> GetDnsIpAddressAsync(string domainName, CancellationToken cancellationToken);
 
         protected abstract Task SetDnsIpAddressAsync(string domainName, string ip, CancellationToken cancellationToken);
-
-        #endregion
     }
 }

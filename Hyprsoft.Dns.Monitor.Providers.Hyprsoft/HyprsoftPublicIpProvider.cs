@@ -9,29 +9,12 @@ namespace Hyprsoft.Dns.Monitor.Providers
 {
     public class HyprsoftPublicIpProvider(ILogger<HyprsoftPublicIpProvider> logger, ProviderSettings settings) : PublicIpProvider(logger), IDisposable
     {
-        #region Fields
-
         private bool _isDisposed;
         private readonly HyprsoftClient _client = new(settings.PublicIpProviderApiCredentials.ApiKey, settings.PublicIpProviderApiCredentials.ApiSecret);
 
-        #endregion
-        #region Constructors
-
-        #endregion
-
-        #region Properties
-
         public const string Key = nameof(HyprsoftPublicIpProvider);
 
-        #endregion
-
-        #region Methods
-
         public async override Task<string> GetPublicIPAddressAsync(CancellationToken cancellationToken = default) => await _client.GetPublicIPAddressAsync(cancellationToken);
-
-        #endregion
-
-        #region IDisposable
 
         public void Dispose()
         {
@@ -52,7 +35,5 @@ namespace Hyprsoft.Dns.Monitor.Providers
 
             _isDisposed = true;
         }
-
-        #endregion
     }
 }

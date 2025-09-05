@@ -13,13 +13,7 @@ namespace Hyprsoft.Dns.Monitor.Providers
 {
     public sealed class GoDaddyDnsProvider : DnsProvider
     {
-        #region Fields
-
         private readonly HttpClient _httpClient;
-
-        #endregion
-
-        #region Constructors
 
         public GoDaddyDnsProvider(ILogger<GoDaddyDnsProvider> logger, IPublicIpProvider provider, ProviderSettings settings, IHttpClientFactory httpClientFactory) : base(logger, provider)
         {
@@ -28,19 +22,11 @@ namespace Hyprsoft.Dns.Monitor.Providers
             _httpClient.DefaultRequestHeaders.Add("Authorization", $"sso-key {settings.DnsProviderApiCredentials.ApiKey}:{settings.DnsProviderApiCredentials.ApiSecret}");
         }
 
-        #endregion
-
-        #region Properties
-
         public const string Key = nameof(GoDaddyDnsProvider);
 
-        #endregion
+        protected override async Task<string> GetDnsIpAddressAsync(string domainName, CancellationToken cancellationToken) => (await GetDnsRecordAsync(domainName)).Data;
 
-        #region Methods
-
-        protected override async Task<string> GetDnsIpAddressAsync(string domainName, CancellationToken cancellationToken = default) => (await GetDnsRecordAsync(domainName)).Data;
-
-        protected override async Task SetDnsIpAddressAsync(string domainName, string ip, CancellationToken cancellationToken = default)
+        protected override async Task SetDnsIpAddressAsync(string domainName, string ip, CancellationToken cancellationToken)
         {
             // It's possible that changes have been made to the DNS record (i.e. TTL, etc.) since we last fetched it so let's fetch it again before we update.
             var dnsRecord = await GetDnsRecordAsync(domainName);
@@ -63,13 +49,11 @@ namespace Hyprsoft.Dns.Monitor.Providers
                 return JsonSerializer.Deserialize<List<DnsRecordResponse>>(await response.Content.ReadAsStringAsync()).First();
         }
 
-        private string BuildApiEndpoint(string domainName)
+        private static string BuildApiEndpoint(string domainName)
         {
             var (subDomain, rootDomain) = GetDomainParts(domainName);
             
             return string.IsNullOrWhiteSpace(subDomain) ? $"v1/domains/{rootDomain}/records/A/@" : $"v1/domains/{rootDomain}/records/A/{subDomain}";
         }
-
-        #endregion
     }
 }

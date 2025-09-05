@@ -8,13 +8,7 @@ namespace Hyprsoft.Dns.Monitor.Providers
 {
     public class HyprsoftDnsProvider(ILogger<HyprsoftDnsProvider> logger, IPublicIpProvider provider) : DnsProvider(logger, provider)
     {
-        #region Properties
-
         public const string Key = nameof(HyprsoftDnsProvider);
-
-        #endregion
-
-        #region Methods
 
         protected override Task<string> GetDnsIpAddressAsync(string domainName, CancellationToken cancellationToken = default)
         {
@@ -29,7 +23,5 @@ namespace Hyprsoft.Dns.Monitor.Providers
             Logger.LogWarning("This DNS provider is for testing purposes only and does NOT update any DNS records.");
             return Task.CompletedTask;
         }
-
-        #endregion
     }
 }

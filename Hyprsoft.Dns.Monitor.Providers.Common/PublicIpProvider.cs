@@ -11,10 +11,6 @@ namespace Hyprsoft.Dns.Monitor.Providers.Common
 
     public abstract class PublicIpProvider(ILogger logger) : ApiProvider(logger), IPublicIpProvider
     {
-        #region Methods
-
         public abstract Task<string> GetPublicIPAddressAsync(CancellationToken cancellationToken);
-
-        #endregion
     }
 }

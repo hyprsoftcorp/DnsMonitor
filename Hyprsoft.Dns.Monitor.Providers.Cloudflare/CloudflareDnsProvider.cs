@@ -12,13 +12,8 @@ namespace Hyprsoft.Dns.Monitor.Providers
 {
     public class CloudflareDnsProvider : DnsProvider
     {
-        #region Fields
-
+        public const string Key = nameof(CloudflareDnsProvider);
         private readonly HttpClient _httpClient;
-
-        #endregion
-
-        #region Constructors
 
         public CloudflareDnsProvider(ILogger<CloudflareDnsProvider> logger, IPublicIpProvider provider, ProviderSettings settings, IHttpClientFactory httpClientFactory) : base(logger, provider)
         {
@@ -27,19 +22,9 @@ namespace Hyprsoft.Dns.Monitor.Providers
             _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {settings.DnsProviderApiCredentials.ApiSecret}");
         }
 
-        #endregion
+        protected override async Task<string> GetDnsIpAddressAsync(string domainName, CancellationToken cancellationToken) => (await GetDnsRecordAsync(domainName)).DnsRecord.Content;
 
-        #region Properties
-
-        public const string Key = nameof(CloudflareDnsProvider);
-
-        #endregion
-
-        #region Methods
-
-        protected override async Task<string> GetDnsIpAddressAsync(string domainName, CancellationToken cancellationToken = default) => (await GetDnsRecordAsync(domainName)).DnsRecord.Content;
-
-        protected override async Task SetDnsIpAddressAsync(string domainName, string ip, CancellationToken cancellationToken = default)
+        protected override async Task SetDnsIpAddressAsync(string domainName, string ip, CancellationToken cancellationToken)
         {
             // It's possible that changes have been made to the DNS record (i.e. TTL, etc.) since we last fetched it so let's fetch it again before we update.
             var (ZoneId, DnsRecord) = await GetDnsRecordAsync(domainName);
@@ -62,7 +47,7 @@ namespace Hyprsoft.Dns.Monitor.Providers
                 throw new HttpRequestException($"Unable to get DNS zones.  Reason: {zoneResponse.ReasonPhrase}.  Details: {await zoneResponse.Content.ReadAsStringAsync() ?? "none."}");
             else
             {
-                var (subDomain, rootDomain) = GetDomainParts(domainName);
+                var (_, rootDomain) = GetDomainParts(domainName);
                 var zoneRecord = JsonSerializer.Deserialize<ZoneRecordResponse>(await zoneResponse.Content.ReadAsStringAsync(), JsonSerializerOptions);
                 zoneId = zoneRecord?.Result?.FirstOrDefault(x => x.Name.ToLower() == rootDomain)?.Id ?? throw new InvalidOperationException($"No DNS zone record found for domain '{rootDomain}'.");
             }
@@ -77,7 +62,5 @@ namespace Hyprsoft.Dns.Monitor.Providers
                 return (zoneId, dnsRecord?.Result?.FirstOrDefault(x => x.Name.ToLower() == domainName.ToLower() && x.Type == "A") ?? throw new InvalidOperationException($"No 'A' DNS record found for domain '{domainName}'."));
             }
         }
-
-        #endregion
     }
 }
