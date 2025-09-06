@@ -4,8 +4,6 @@ using Hyprsoft.Logging.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.IO;
 
 namespace Hyprsoft.Dns.Monitor
 {
@@ -19,7 +17,7 @@ namespace Hyprsoft.Dns.Monitor
                 .UseWindowsService()
                 .UseSystemd()
                 .ConfigureLogging(builder => builder.AddSimpleFileLogger())
-                .ConfigureAppConfiguration(builder => builder.AddJsonFile(Path.Combine(AppContext.BaseDirectory, "appsettings.json"), true))
+                .ConfigureAppConfiguration(builder => builder.AddJsonFile("appsettings.json", true))
                 .ConfigureServices((hostContext, services) =>
                 {
                     var monitorSettings = new MonitorSettings();
