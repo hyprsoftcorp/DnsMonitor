@@ -1,4 +1,4 @@
-# linux-x64
+# linux-amd64
 FROM mcr.microsoft.com/dotnet/runtime:9.0.8
 WORKDIR /app
 COPY Hyprsoft.Dns.Monitor/bin/Release/net9.0/linux-x64/publish/ .
