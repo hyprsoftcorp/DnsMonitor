@@ -1,5 +1,5 @@
 # linux-arm64
-FROM mcr.microsoft.com/dotnet/runtime:9.0.8-bookworm-slim-arm64v8
+FROM mcr.microsoft.com/dotnet/runtime:10.0.0
 WORKDIR /app
-COPY Hyprsoft.Dns.Monitor/bin/Release/net9.0/linux-arm64/publish/ .
+COPY Hyprsoft.Dns.Monitor/bin/Release/net10.0/linux-arm64/publish/ .
 ENTRYPOINT ["dotnet", "Hyprsoft.Dns.Monitor.dll"]

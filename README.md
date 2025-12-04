@@ -1,11 +1,11 @@
 # Introduction 
-This .NET 9 "worker" background service monitors your public IP address for changes and updates the appropriate DNS records to allow remote access to your home/office network.
+This .NET 10 "worker" background service monitors your public IP address for changes and updates the appropriate DNS records to allow remote access to your home/office network.
 It performs very basic functions similar to [changeip.com](https://changeip.com), [dyndns.com](https://dyndns.com), [easydns.com](https://easydns.com), and [no-ip.com](https://noip.com).
 
 ## Getting Started
 <b>This service must be run inside your home/office network, not in the cloud.</b>
 
-Since .NET 9 supports a number of operating systems, this app can be run almost anywhere.
+Since .NET 10 supports a number of operating systems, this app can be run almost anywhere.
 The service ensures that anytime our public IP address changes, our DNS records are automatically updated so that we can always access various services on our network from anywhere in the world.
 
 ### Supported Public IP Address Providers
@@ -38,11 +38,11 @@ See our [Docker Hub](https://hub.docker.com/repository/docker/hyprsoft/hyprsoft.
 ### Linux (x64)
 Note: the appsettings.json mount below is Ubuntu Server specific (i.e. snap mount restrictions).
 ```
-docker run -it -d --name dnsmonitor --restart always -v /var/snap/docker/common/etc/dnsmonitor/appsettings.json:/app/appsettings.json:ro -v /var/log/dnsmonitor/app-log.log:/app/app-log.log hyprsoft/hyprsoft.dns.monitor:2.0.0-linux-x64
+docker run -it -d --name dnsmonitor --restart always -v /var/snap/docker/common/etc/dnsmonitor/appsettings.json:/app/appsettings.json:ro -v /var/log/dnsmonitor/app-log.log:/app/app-log.log hyprsoft/hyprsoft.dns.monitor:2.1.0-linux-x64
 ```
 ### Linux (arm64)
 ```
-docker run -it -d --name dnsmonitor --restart always -v /home/pi/dnsmonitor/appsettings.json:/app/appsettings.json:ro hyprsoft/hyprsoft.dns.monitor:2.0.0-linux-arm64
+docker run -it -d --name dnsmonitor --restart always -v /home/pi/dnsmonitor/appsettings.json:/app/appsettings.json:ro hyprsoft/hyprsoft.dns.monitor:2.1.0-linux-arm64
 ```
 
 ## Automatic Service Startup on Linux

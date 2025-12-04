@@ -45,8 +45,12 @@ namespace Hyprsoft.Dns.Monitor
                 {
                     _logger.LogError(ex, "Unable to check for public IP address changes.");
                 }
-                _logger.LogInformation("Next check at '{CheckIntervalMinutes}'.", DateTime.Now.Add(_settings.CheckInterval));
-                await Task.Delay(_settings.CheckInterval, stoppingToken);
+                try
+                {
+                    _logger.LogInformation("Next check at '{CheckIntervalMinutes}'.", DateTime.Now.Add(_settings.CheckInterval));
+                    await Task.Delay(_settings.CheckInterval, stoppingToken);
+                }
+                catch (TaskCanceledException) { }
             }
         }
 
